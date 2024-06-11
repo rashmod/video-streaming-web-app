@@ -7,6 +7,7 @@ import './index.css';
 import App from './App';
 import Home from './routes/Home.route';
 import Watch from './routes/Watch.route';
+import Upload from './routes/Upload.route';
 
 const router = createBrowserRouter([
 	{
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
 			},
 			{
 				path: '/upload',
-				element: <Watch />,
+				element: <Upload />,
 			},
 		],
 	},
