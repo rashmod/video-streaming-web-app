@@ -2,11 +2,13 @@ import express from 'express';
 import { PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
 import { readFileSync } from 'fs';
 import path from 'path';
+import cors from 'cors';
 
 import client from './config/s3.config';
 import env from './config/env.config';
 
 const app = express();
+app.use(cors());
 
 app.post('/upload', async (req, res) => {
 	const fileContent = readFileSync(path.join(__dirname, 'test.png'));
@@ -20,7 +22,9 @@ app.post('/upload', async (req, res) => {
 	const command = new PutObjectCommand(params);
 	await client.send(command);
 
-	res.send('Hello World!');
+	console.log('uploading file...');
+
+	res.status(200).json({ message: 'Hello World!' });
 });
 
 app.listen(env.PORT, () => {
