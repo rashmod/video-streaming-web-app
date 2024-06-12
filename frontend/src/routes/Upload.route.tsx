@@ -19,7 +19,10 @@ function Upload() {
 		e.preventDefault();
 
 		if (!file) return;
-		mutate();
+
+		const formData = new FormData();
+		formData.append('video', file);
+		mutate(formData);
 	}
 
 	return (

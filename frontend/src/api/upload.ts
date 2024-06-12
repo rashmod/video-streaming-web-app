@@ -1,7 +1,13 @@
 import axios from 'axios';
 
-async function uploadVideo() {
-	const response = await axios.post('http://127.0.0.1:3001/upload');
+async function uploadVideo(uploadData: FormData) {
+	const response = await axios.post(
+		'http://localhost:3001/upload',
+		uploadData,
+		{
+			headers: { 'Content-Type': 'multipart/form-data' },
+		}
+	);
 	console.log(response);
 }
 
