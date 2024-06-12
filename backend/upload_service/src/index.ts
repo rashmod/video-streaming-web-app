@@ -4,27 +4,12 @@ import fs from 'fs';
 import asyncFs from 'fs/promises';
 import path from 'path';
 import cors from 'cors';
-import multer from 'multer';
-import crypto from 'crypto';
 
 import client from './config/s3.config';
 import env from './config/env.config';
+import upload from './config/multer.config';
 
 const app = express();
-
-const randomImageName = (bytes = 32) => {
-	return Date.now().toString() + crypto.randomBytes(bytes).toString('hex');
-};
-
-const storage = multer.diskStorage({
-	destination: (req, file, cb) => {
-		cb(null, './uploads/');
-	},
-	filename: (req, file, cb) => {
-		cb(null, randomImageName() + path.extname(file.originalname));
-	},
-});
-const upload = multer({ storage });
 
 app.use(cors());
 app.use(express.json());
