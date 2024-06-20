@@ -1,10 +1,12 @@
 import express from 'express';
 
-import uploadController from '../controllers/upload.controller';
+import controller from '../controllers/index.controller';
 import upload from '../config/multer.config';
 
 const router = express.Router();
 
-router.post('/', upload.single('video'), uploadController);
+router.post('/initialize', controller.initializeUploadController);
+router.post('/upload', upload.single('video'), controller.uploadController);
+router.post('/complete', controller.completeUploadController);
 
 export default router;
