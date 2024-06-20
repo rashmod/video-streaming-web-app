@@ -1,7 +1,7 @@
 import { CompleteMultipartUploadCommand } from '@aws-sdk/client-s3';
 import { Request, Response } from 'express';
 import envConfig from '../config/env.config';
-import client from '../config/s3.config';
+import s3Client from '../config/s3.config';
 
 export default async function completeUploadController(
 	req: Request,
@@ -26,7 +26,7 @@ export default async function completeUploadController(
 		},
 	});
 
-	await client.send(command);
+	await s3Client.send(command);
 
 	res.status(200).json({ message: 'Video successfully uploaded' });
 }

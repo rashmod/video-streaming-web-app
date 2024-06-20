@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
 import fs from 'fs';
 import asyncFs from 'fs/promises';
-import path from 'path';
 import { UploadPartCommand } from '@aws-sdk/client-s3';
 
 import envConfig from '../config/env.config';
-import client from '../config/s3.config';
+import s3Client from '../config/s3.config';
 import KafkaProducer from '../kafka/Kafka';
 
 const kafkaProducer = new KafkaProducer(envConfig.clientId);
@@ -30,7 +29,7 @@ export default async function uploadController(req: Request, res: Response) {
 		Body: fileContent,
 	});
 
-	const result = await client.send(command);
+	const result = await s3Client.send(command);
 	await asyncFs.access(filePath);
 	await asyncFs.unlink(filePath);
 

@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { CreateMultipartUploadCommand } from '@aws-sdk/client-s3';
 
 import randomName from '../utilities/randomName';
-import client from '../config/s3.config';
+import s3Client from '../config/s3.config';
 import envConfig from '../config/env.config';
 
 export default async function initializeUploadController(
@@ -17,7 +17,7 @@ export default async function initializeUploadController(
 		Key: videoId,
 	});
 
-	const multipartUpload = await client.send(command);
+	const multipartUpload = await s3Client.send(command);
 
 	const uploadId = multipartUpload.UploadId;
 
