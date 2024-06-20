@@ -5,9 +5,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
 
 import App from './App';
-import Home from './routes/Home.route';
-import Watch from './routes/Watch.route';
-import Upload from './routes/Upload.route';
+import Home from './pages/Home.page';
+import Watch from './pages/Watch.page';
+import Upload from './pages/Upload.page';
 
 const router = createBrowserRouter([
 	{
