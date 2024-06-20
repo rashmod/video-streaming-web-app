@@ -1,14 +1,38 @@
 import axios from 'axios';
 
-async function uploadVideo(uploadData: FormData) {
-	const response = await axios.post(
-		'http://localhost:3001/upload',
-		uploadData,
-		{
-			headers: { 'Content-Type': 'multipart/form-data' },
-		}
-	);
+import envConfig from '../config/env.config';
+
+const API_URL = envConfig.VITE_API_URL;
+
+async function initializeUpload(extension: string): Promise<{
+	uploadId: string;
+	videoId: string;
+}> {
+	const response = await axios.post(`${API_URL}/initialize`, {
+		extension,
+	});
 	console.log(response);
+	return response.data;
 }
 
-export default uploadVideo;
+async function uploadVideo(
+	uploadData: FormData
+): Promise<{ message: string; eTag: string | undefined }> {
+	const response = await axios.post(`${API_URL}/upload`, uploadData, {
+		headers: { 'Content-Type': 'multipart/form-data' },
+	});
+	console.log(response);
+	return response.data;
+}
+
+async function completeUpload(data: {
+	uploadId: string;
+	videoId: string;
+	parts: { ETag: string | undefined; PartNumber: number }[];
+}): Promise<{ message: string }> {
+	const response = await axios.post(`${API_URL}/complete`, data);
+	console.log(response);
+	return response.data;
+}
+
+export default { initializeUpload, uploadVideo, completeUpload };
