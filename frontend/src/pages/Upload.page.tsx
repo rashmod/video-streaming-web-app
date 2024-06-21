@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useMutation } from 'react-query';
 
 import upload from '../api/upload';
+import getFileExtension from '../utilities/getFileExtension';
 
 function Upload() {
 	const { mutateAsync: initializeUpload } = useMutation({
@@ -21,10 +22,6 @@ function Upload() {
 	function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
 		if (!e.target.files) return;
 		setFile(e.target.files[0]);
-	}
-
-	function getFileExtension(filename: string) {
-		return filename.split('.').pop() ?? '';
 	}
 
 	async function handleUpload(e: React.FormEvent<HTMLFormElement>) {
