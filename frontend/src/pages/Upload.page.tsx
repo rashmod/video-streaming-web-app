@@ -3,6 +3,9 @@ import { useMutation } from 'react-query';
 
 import upload from '../api/upload';
 import getFileExtension from '../utilities/getFileExtension';
+import { chunkSize } from '../constants/constants';
+import chunkFile from '../utilities/chunkFile';
+import createUploadFormData from '../utilities/createUploadFormData';
 
 function Upload() {
 	const { mutateAsync: initializeUpload } = useMutation({
@@ -34,28 +37,30 @@ function Upload() {
 		const initResponse = await initializeUpload(extension);
 
 		const { uploadId, videoId } = initResponse;
+		const chunks = chunkFile(file, chunkSize);
 
-		const partNumber = 1;
+		const uploadRequest = [];
 
-		const formData = new FormData();
-		formData.append('videoId', videoId);
-		formData.append('uploadId', uploadId);
-		formData.append('partNumber', partNumber.toString());
-		formData.append('video', file);
+		for (let i = 0; i < chunks.length; i++) {
+			const formData = createUploadFormData({
+				file: chunks[i],
+				partNumber: i + 1,
+				uploadId,
+				videoId,
+			});
 
-		const uploadResponse = await uploadVideo(formData);
+			uploadRequest.push(uploadVideo(formData));
+		}
 
-		const { eTag } = uploadResponse;
+		const uploadResponse = await Promise.all(uploadRequest);
 
 		await completeUpload({
 			uploadId,
 			videoId,
-			parts: [
-				{
-					ETag: eTag,
-					PartNumber: partNumber,
-				},
-			],
+			parts: uploadResponse.map((res, i) => ({
+				ETag: res.eTag,
+				PartNumber: i + 1,
+			})),
 		});
 	}
 
