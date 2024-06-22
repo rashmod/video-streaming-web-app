@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 
+import watchRoutes from './routes/watch.route';
 import envConfig from './config/env.config';
 
 const app = express();
@@ -8,9 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/', (req, res) => {
-	res.send('Hello World!');
-});
+app.use('/', watchRoutes);
 
 app.listen(envConfig.PORT, () => {
 	console.log(
