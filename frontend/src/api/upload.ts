@@ -2,13 +2,13 @@ import axios from 'axios';
 
 import envConfig from '../config/env.config';
 
-const API_URL = envConfig.VITE_API_URL;
+const UPLOAD_SERVICE_API_URL = envConfig.VITE_UPLOAD_SERVICE_API_URL;
 
 async function initializeUpload(extension: string): Promise<{
 	uploadId: string;
 	videoId: string;
 }> {
-	const response = await axios.post(`${API_URL}/initialize`, {
+	const response = await axios.post(`${UPLOAD_SERVICE_API_URL}/initialize`, {
 		extension,
 	});
 	console.log(response);
@@ -18,9 +18,13 @@ async function initializeUpload(extension: string): Promise<{
 async function uploadVideo(
 	uploadData: FormData
 ): Promise<{ message: string; eTag: string | undefined }> {
-	const response = await axios.post(`${API_URL}/upload`, uploadData, {
-		headers: { 'Content-Type': 'multipart/form-data' },
-	});
+	const response = await axios.post(
+		`${UPLOAD_SERVICE_API_URL}/upload`,
+		uploadData,
+		{
+			headers: { 'Content-Type': 'multipart/form-data' },
+		}
+	);
 	console.log(response);
 	return response.data;
 }
@@ -30,7 +34,10 @@ async function completeUpload(data: {
 	videoId: string;
 	parts: { ETag: string | undefined; PartNumber: number }[];
 }): Promise<{ message: string }> {
-	const response = await axios.post(`${API_URL}/complete`, data);
+	const response = await axios.post(
+		`${UPLOAD_SERVICE_API_URL}/complete`,
+		data
+	);
 	console.log(response);
 	return response.data;
 }
