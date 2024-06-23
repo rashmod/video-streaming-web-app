@@ -69,7 +69,11 @@ function Upload() {
 			<h1 className='text-3xl font-bold underline'>Youtube Clone</h1>
 			<h2 className='text-2xl'>Home Page</h2>
 			<form onSubmit={handleUpload}>
-				<input type='file' name='' id='' onChange={handleFileChange} />
+				<input
+					type='file'
+					accept='video/*'
+					onChange={handleFileChange}
+				/>
 				<button type='submit'>Upload</button>
 			</form>
 		</>
