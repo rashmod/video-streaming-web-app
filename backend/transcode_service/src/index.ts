@@ -1,5 +1,11 @@
+import envConfig from './config/env.config';
 import transcodeController from './controller/transcode.controller';
+import KafkaConsumer from './kafka/Kafka';
 
 console.log('starting transcode service...');
 
-transcodeController();
+const consumer = new KafkaConsumer(envConfig.clientId, 'group-1');
+
+consumer.connect();
+consumer.subscribe('video');
+consumer.consume(transcodeController);
