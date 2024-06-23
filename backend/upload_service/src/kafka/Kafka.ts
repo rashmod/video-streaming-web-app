@@ -17,7 +17,7 @@ export default class KafkaProducer {
 
 	async produce(
 		key: string,
-		data: { bucket: string; filename: string },
+		data: { bucket: string; videoId: string },
 		partition = 0,
 		topic = 'video'
 	) {
