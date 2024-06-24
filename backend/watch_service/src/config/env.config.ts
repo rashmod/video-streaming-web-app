@@ -11,8 +11,6 @@ const schema = z.object({
 	AWS_SECRET_ACCESS_KEY: z.string(),
 	AWS_REGION: z.string(),
 	AWS_BUCKET_NAME: z.string(),
-
-	clientId: z.string().trim().min(1),
 });
 
 const parsedEnv = schema.safeParse(process.env);
