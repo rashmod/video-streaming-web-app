@@ -10,6 +10,8 @@ export default async function initializeUploadController(
 	res: Response
 ) {
 	const { extension }: { extension: string } = req.body;
+	// todo change this to videoName
+	// todo create a video entry in db and get videoId
 	const videoId = randomName() + '.' + extension;
 
 	const command = new CreateMultipartUploadCommand({

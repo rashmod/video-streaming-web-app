@@ -5,7 +5,7 @@ import envConfig from '../config/env.config';
 import s3Client from '../config/s3.config';
 import KafkaProducer from '../kafka/Kafka';
 
-const kafkaProducer = new KafkaProducer(envConfig.clientId);
+const kafkaProducer = new KafkaProducer(envConfig.KAFKA_CLIENT_ID);
 
 export default async function completeUploadController(
 	req: Request,
