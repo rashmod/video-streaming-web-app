@@ -1,9 +1,14 @@
 import { Kafka, Consumer } from 'kafkajs';
 
+import envConfig from '../config/env.config';
+
 export default class KafkaConsumer {
 	consumer: Consumer;
 	constructor(clientId: string, groupId: string) {
-		const kafka = new Kafka({ clientId, brokers: ['localhost:29092'] });
+		const kafka = new Kafka({
+			clientId,
+			brokers: [envConfig.KAFKA_BROKER],
+		});
 		this.consumer = kafka.consumer({ groupId });
 	}
 

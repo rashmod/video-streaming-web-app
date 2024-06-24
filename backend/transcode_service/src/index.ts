@@ -4,7 +4,7 @@ import KafkaConsumer from './kafka/Kafka';
 
 console.log('starting transcode service...');
 
-const consumer = new KafkaConsumer(envConfig.clientId, 'group-1');
+const consumer = new KafkaConsumer(envConfig.KAFKA_CLIENT_ID, 'group-1');
 
 consumer.connect();
 consumer.subscribe('video');

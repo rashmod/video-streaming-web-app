@@ -7,12 +7,14 @@ const schema = z.object({
 	HOST: z.string().trim().min(1),
 	PORT: z.coerce.number().int().positive(),
 	NODE_ENV: z.enum(['DEVELOPMENT', 'PRODUCTION', 'TEST']),
+
 	AWS_ACCESS_KEY: z.string(),
 	AWS_SECRET_ACCESS_KEY: z.string(),
 	AWS_REGION: z.string(),
 	AWS_BUCKET_NAME: z.string(),
 
-	clientId: z.string().trim().min(1),
+	KAFKA_CLIENT_ID: z.string().trim().min(1),
+	KAFKA_BROKER: z.string().trim().min(1),
 });
 
 const parsedEnv = schema.safeParse(process.env);
