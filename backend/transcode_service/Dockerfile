@@ -1,5 +1,8 @@
 FROM node:18-alpine
 
+RUN apk update
+RUN apk add ffmpeg
+
 ADD https://raw.githubusercontent.com/eficode/wait-for/v2.1.3/wait-for /usr/local/bin/wait-for
 RUN chmod +x /usr/local/bin/wait-for
 
