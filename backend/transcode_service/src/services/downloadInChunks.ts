@@ -46,15 +46,10 @@ export default async function downloadInChunks(
 			start: newStart,
 			end: newEnd,
 			length: newLength,
-		} = getRangeAndLength(ContentRange);
+		} = getRangeAndLength(ContentRange as string);
 
-		if (newStart === -1) {
-			rangeAndLength.start = nextRange.start;
-			rangeAndLength.end = nextRange.end;
-		} else {
-			rangeAndLength.start = newStart;
-			rangeAndLength.end = newEnd;
-			rangeAndLength.length = newLength;
-		}
+		rangeAndLength.start = newStart;
+		rangeAndLength.end = newEnd;
+		rangeAndLength.length = newLength;
 	}
 }

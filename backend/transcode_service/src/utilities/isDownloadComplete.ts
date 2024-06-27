@@ -1,3 +1,3 @@
 export default function isDownloadComplete(end: number, length: number) {
-	return end >= length - 1;
+	return end === length - 1;
 }
