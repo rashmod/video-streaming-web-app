@@ -1,4 +1,5 @@
-import ffmpeg from 'fluent-ffmpeg';
+import ffmpeg, { FfprobeData } from 'fluent-ffmpeg';
+import { promisify } from 'util';
 
 import downloadInChunks from '../services/downloadInChunks';
 import generateFilePath from '../utilities/generateFilePath';
@@ -25,29 +26,21 @@ export default async function transcodeController(str: string | undefined) {
 	await downloadInChunks(bucket, videoId, filePath);
 	console.log('downloaded in chunks...');
 
-	ffmpeg.ffprobe(filePath, (err, metadata) => {
-		if (err) {
-			console.log(err);
-		} else {
-			console.log(JSON.stringify(metadata, null, 2));
+	const ffprobe: (arg1: string) => Promise<FfprobeData> = promisify(
+		ffmpeg.ffprobe
+	);
 
-			const videoStream = metadata.streams.find(
-				(stream) => stream.codec_type === 'video'
-			);
+	const metadata = await ffprobe(filePath);
 
-			if (videoStream) {
-				const resolution = {
-					width: videoStream.width,
-					height: videoStream.height,
-				};
+	const videoStream = metadata.streams.find(
+		(stream) => stream.codec_type === 'video'
+	);
+	if (!videoStream) throw new Error('No video stream found');
 
-				console.log('----------------------------------');
-				console.log('----------------------------------');
-				console.log('----------------------------------');
-				console.log('Resolution:', resolution);
-			} else {
-				console.log('No video stream found');
-			}
-		}
-	});
+	const resolution = {
+		width: videoStream.width,
+		height: videoStream.height,
+	};
+
+	console.log('Resolution:', resolution);
 }
