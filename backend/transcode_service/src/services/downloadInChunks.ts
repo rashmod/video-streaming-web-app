@@ -1,5 +1,4 @@
 import fs from 'fs';
-import path from 'path';
 
 import isDownloadComplete from '../utilities/isDownloadComplete';
 import getObjectInRange from '../utilities/getObjectInRange';
@@ -7,18 +6,10 @@ import getRangeAndLength from '../utilities/getRangeAndLength';
 
 export default async function downloadInChunks(
 	bucket: string,
-	videoId: string
+	videoName: string,
+	filePath: string
 ) {
-	const inputDir = './input/';
-	if (!fs.existsSync(inputDir)) {
-		fs.mkdirSync(inputDir);
-	}
-
-	// todo get videoName from db
-	const videoName = videoId;
-
-	const filePath = './input/';
-	const writeStream = fs.createWriteStream(path.join(inputDir, videoId));
+	const writeStream = fs.createWriteStream(filePath);
 
 	const MB = 1024 * 1024;
 	const chunk = 5 * MB;
