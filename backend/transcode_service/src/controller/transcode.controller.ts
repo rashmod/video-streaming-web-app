@@ -1,3 +1,5 @@
+import ffmpeg from 'fluent-ffmpeg';
+
 import downloadInChunks from '../services/downloadInChunks';
 import generateFilePath from '../utilities/generateFilePath';
 
@@ -22,4 +24,30 @@ export default async function transcodeController(str: string | undefined) {
 
 	await downloadInChunks(bucket, videoId, filePath);
 	console.log('downloaded in chunks...');
+
+	ffmpeg.ffprobe(filePath, (err, metadata) => {
+		if (err) {
+			console.log(err);
+		} else {
+			console.log(JSON.stringify(metadata, null, 2));
+
+			const videoStream = metadata.streams.find(
+				(stream) => stream.codec_type === 'video'
+			);
+
+			if (videoStream) {
+				const resolution = {
+					width: videoStream.width,
+					height: videoStream.height,
+				};
+
+				console.log('----------------------------------');
+				console.log('----------------------------------');
+				console.log('----------------------------------');
+				console.log('Resolution:', resolution);
+			} else {
+				console.log('No video stream found');
+			}
+		}
+	});
 }
