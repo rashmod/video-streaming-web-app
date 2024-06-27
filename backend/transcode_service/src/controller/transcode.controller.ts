@@ -23,7 +23,7 @@ export default async function transcodeController(str: string | undefined) {
 	// todo get videoName from db
 	const videoName = videoId;
 
-	const filePath = generateFilePath(videoName, 'input');
+	const filePath = generateFilePath({ dir: 'input', videoName });
 
 	await downloadInChunks(bucket, videoId, filePath);
 	console.log('downloaded in chunks...');
@@ -33,7 +33,11 @@ export default async function transcodeController(str: string | undefined) {
 
 	VARIANTS.forEach((variant) => {
 		const outputFileName = `output-${variant.name}.m3u8`;
-		const outputFilePath = generateFilePath(outputFileName, 'output');
+		const outputFilePath = generateFilePath({
+			dir: 'output',
+			videoName: outputFileName,
+			variant: variant.name,
+		});
 
 		transcodeVideo(filePath, outputFileName, outputFilePath, variant);
 	});
