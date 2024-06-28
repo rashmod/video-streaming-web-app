@@ -32,13 +32,20 @@ export default async function transcodeController(str: string | undefined) {
 	console.log('Resolution:', resolution);
 
 	VARIANTS.forEach((variant) => {
-		const outputFileName = `output-${variant.name}.m3u8`;
+		const cleanVideoName = videoName.replaceAll('.', '_');
+		const outputFileName = `${cleanVideoName}_${variant.name}.m3u8`;
 		const outputFilePath = generateFilePath({
 			dir: 'output',
-			videoName: outputFileName,
+			outputFileName,
+			videoName: cleanVideoName,
 			variant: variant.name,
 		});
 
-		transcodeVideo(filePath, outputFileName, outputFilePath, variant);
+			transcodeVideo({
+				inputFilePath: filePath,
+				outputFileName,
+				outputFilePath,
+				variant,
+			})
 	});
 }
