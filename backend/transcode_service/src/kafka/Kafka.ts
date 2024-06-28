@@ -27,20 +27,29 @@ export default class KafkaConsumer {
 	}
 
 	pause() {
+		console.log('pausing consumer...');
 		this.consumer.pause([{ topic: this.topic }]);
 	}
 
 	resume() {
+		console.log('resuming consumer...');
 		this.consumer.resume([{ topic: this.topic }]);
 	}
 
-	async consume(callback: (message: string | undefined) => void) {
+	async consume(
+		callback: (
+			message: string | undefined,
+			resumeConsumer: () => void
+		) => void
+	) {
 		await this.consumer.run({
 			eachMessage: async ({ topic, partition, message }) => {
 				console.log(
 					`topic:[${topic}] partition:[${partition}] message:[${message.value?.toString()}]`
 				);
-				callback(message.value?.toString());
+
+				this.pause();
+				callback(message.value?.toString(), () => this.resume());
 			},
 		});
 	}

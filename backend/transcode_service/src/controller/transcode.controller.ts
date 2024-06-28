@@ -11,7 +11,10 @@ type TranscodeRequest = {
 	videoId: string;
 };
 
-export default async function transcodeController(str: string | undefined) {
+export default async function transcodeController(
+	str: string | undefined,
+	resumeConsumer: () => void
+) {
 	if (!str) return;
 	console.log('transcoding...', str);
 
@@ -31,6 +34,8 @@ export default async function transcodeController(str: string | undefined) {
 	const resolution = await getVideoResolution(filePath);
 	console.log('Resolution:', resolution);
 
+	const transcodedPromises: Promise<unknown>[] = [];
+
 	VARIANTS.forEach((variant) => {
 		const cleanVideoName = videoName.replaceAll('.', '_');
 		const outputFileName = `${cleanVideoName}_${variant.name}.m3u8`;
@@ -41,11 +46,16 @@ export default async function transcodeController(str: string | undefined) {
 			variant: variant.name,
 		});
 
+		transcodedPromises.push(
 			transcodeVideo({
 				inputFilePath: filePath,
 				outputFileName,
 				outputFilePath,
 				variant,
 			})
+		);
 	});
+
+	await Promise.all(transcodedPromises);
+	resumeConsumer();
 }
