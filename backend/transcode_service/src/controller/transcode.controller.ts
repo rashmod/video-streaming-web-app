@@ -1,7 +1,7 @@
 import downloadInChunks from '../services/downloadInChunks';
+import transcodeVideo from '../services/transcodeVideo';
 
 import generateFilePath from '../utilities/generateFilePath';
-import transcodeVideo from '../utilities/transcodeVideo';
 import getVideoResolution from '../utilities/getVideoResolution';
 import getAllFilesPath from '../utilities/getAllFilesPath';
 
