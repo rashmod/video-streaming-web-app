@@ -3,7 +3,9 @@ import { Kafka, Consumer } from 'kafkajs';
 import envConfig from '../config/env.config';
 
 export default class KafkaConsumer {
+	topic = 'video';
 	consumer: Consumer;
+
 	constructor(clientId: string, groupId: string) {
 		const kafka = new Kafka({
 			clientId,
@@ -22,6 +24,14 @@ export default class KafkaConsumer {
 
 	async subscribe(topic: string) {
 		await this.consumer.subscribe({ topic, fromBeginning: true });
+	}
+
+	pause() {
+		this.consumer.pause([{ topic: this.topic }]);
+	}
+
+	resume() {
+		this.consumer.resume([{ topic: this.topic }]);
 	}
 
 	async consume(callback: (message: string | undefined) => void) {
