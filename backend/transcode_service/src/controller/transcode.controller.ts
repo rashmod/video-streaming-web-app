@@ -3,6 +3,7 @@ import downloadInChunks from '../services/downloadInChunks';
 import generateFilePath from '../utilities/generateFilePath';
 import transcodeVideo from '../utilities/transcodeVideo';
 import getVideoResolution from '../utilities/getVideoResolution';
+import getAllFilesPath from '../utilities/getAllFilesPath';
 
 import VARIANTS from '../constants/constants';
 
@@ -57,5 +58,9 @@ export default async function transcodeController(
 	});
 
 	await Promise.all(transcodedPromises);
+
+	const baseDir = './output';
+	const videos = getAllFilesPath(baseDir);
+
 	resumeConsumer();
 }
