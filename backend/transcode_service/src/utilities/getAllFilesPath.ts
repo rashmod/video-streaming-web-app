@@ -2,7 +2,10 @@ import fs from 'fs';
 import path from 'path';
 
 export default function getAllFilesPath(baseDir: string) {
-	return getAllFiles(baseDir).map((file) => path.relative(baseDir, file));
+	return getAllFiles(baseDir).map((file) => ({
+		original: file,
+		relative: path.relative(baseDir, file),
+	}));
 }
 
 function getAllFiles(baseDir: string) {

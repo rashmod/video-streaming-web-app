@@ -1,5 +1,6 @@
 import downloadInChunks from '../services/downloadInChunks';
 import transcodeVideo from '../services/transcodeVideo';
+import uploadAllFilesToS3 from '../services/uploadAllFilesToS3';
 
 import generateFilePath from '../utilities/generateFilePath';
 import getVideoResolution from '../utilities/getVideoResolution';
@@ -61,6 +62,8 @@ export default async function transcodeController(
 
 	const baseDir = './output';
 	const videos = getAllFilesPath(baseDir);
+
+	await uploadAllFilesToS3(videos);
 
 	resumeConsumer();
 }
