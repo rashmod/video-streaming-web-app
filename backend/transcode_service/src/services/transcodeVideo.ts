@@ -1,12 +1,6 @@
 import Ffmpeg from 'fluent-ffmpeg';
 
-export default function transcodeVideo({
-	inputFilePath,
-	outputFileName,
-	outputFilePath,
-	variant,
-	hlsTime = 10,
-}: {
+type TranscodeRequest = {
 	inputFilePath: string;
 	outputFileName: string;
 	outputFilePath: string;
@@ -14,14 +8,28 @@ export default function transcodeVideo({
 		width: number;
 		height: number;
 		name: string;
+		videoBitrate: string;
+		audioBitrate: string;
 	};
 	hlsTime?: number;
-}) {
+};
+
+export default function transcodeVideo({
+	inputFilePath,
+	outputFileName,
+	outputFilePath,
+	variant,
+	hlsTime = 10,
+}: TranscodeRequest) {
 	return new Promise((resolve, reject) => {
 		Ffmpeg(inputFilePath)
 			.outputOptions([
 				'-profile:v baseline',
 				'-level 3.0',
+				'-c:v h264',
+				`-b:v ${variant.videoBitrate}`,
+				'-c:a aac',
+				`-b:a ${variant.audioBitrate}`,
 				`-s ${variant.width}x${variant.height}`,
 				'-start_number 0',
 				`-hls_time ${hlsTime}`,
