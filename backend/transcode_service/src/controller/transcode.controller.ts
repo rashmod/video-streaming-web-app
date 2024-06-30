@@ -1,13 +1,17 @@
+import path from 'path';
+
 import downloadInChunks from '../services/downloadInChunks';
 import transcodeVideo from '../services/transcodeVideo';
 import uploadAllFilesToS3 from '../services/uploadAllFilesToS3';
 
+import deleteFile from '../utilities/deleteFile';
 import generateFilePath from '../utilities/generateFilePath';
 import getVideoResolution from '../utilities/getVideoResolution';
 import getAllFilesPath from '../utilities/getAllFilesPath';
+import generateMasterPlaylist from '../utilities/generateMasterPlaylist';
+import deleteDirectory from '../utilities/deleteDirectory';
 
 import VARIANTS from '../constants/constants';
-import generateMasterPlaylist from '../utilities/generateMasterPlaylist';
 
 type TranscodeRequest = {
 	bucket: string;
@@ -29,12 +33,12 @@ export default async function transcodeController(
 	// todo get videoName from db
 	const videoName = videoId;
 
-	const filePath = generateFilePath({ dir: 'input', videoName });
+	const inputFilePath = generateFilePath({ dir: 'input', videoName });
 
-	await downloadInChunks(bucket, videoId, filePath);
+	await downloadInChunks(bucket, videoId, inputFilePath);
 	console.log('downloaded in chunks...');
 
-	const resolution = await getVideoResolution(filePath);
+	const resolution = await getVideoResolution(inputFilePath);
 	console.log('Resolution:', resolution);
 
 	const transcodedPromises: Promise<unknown>[] = [];
@@ -52,7 +56,7 @@ export default async function transcodeController(
 
 		transcodedPromises.push(
 			transcodeVideo({
-				inputFilePath: filePath,
+				inputFilePath,
 				outputFileName,
 				outputFilePath,
 				variant,
@@ -68,6 +72,10 @@ export default async function transcodeController(
 	const videos = getAllFilesPath(baseDir);
 
 	await uploadAllFilesToS3(videos);
+
+	const outputDir = path.join(baseDir, cleanVideoName);
+	deleteDirectory(outputDir);
+	deleteFile(inputFilePath);
 
 	resumeConsumer();
 }
