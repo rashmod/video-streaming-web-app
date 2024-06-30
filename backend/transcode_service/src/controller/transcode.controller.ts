@@ -7,6 +7,7 @@ import getVideoResolution from '../utilities/getVideoResolution';
 import getAllFilesPath from '../utilities/getAllFilesPath';
 
 import VARIANTS from '../constants/constants';
+import generateMasterPlaylist from '../utilities/generateMasterPlaylist';
 
 type TranscodeRequest = {
 	bucket: string;
@@ -38,8 +39,9 @@ export default async function transcodeController(
 
 	const transcodedPromises: Promise<unknown>[] = [];
 
+	const cleanVideoName = videoName.replaceAll('.', '_');
+
 	VARIANTS.forEach((variant) => {
-		const cleanVideoName = videoName.replaceAll('.', '_');
 		const outputFileName = `${cleanVideoName}_${variant.name}.m3u8`;
 		const outputFilePath = generateFilePath({
 			dir: 'output',
@@ -57,6 +59,8 @@ export default async function transcodeController(
 			})
 		);
 	});
+
+	generateMasterPlaylist(cleanVideoName);
 
 	await Promise.all(transcodedPromises);
 
