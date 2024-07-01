@@ -4,7 +4,9 @@ import envConfig from '../config/env.config';
 
 const WATCH_SERVICE_API_URL = envConfig.VITE_WATCH_SERVICE_API_URL;
 
-async function watchVideo(videoId: string) {
+async function watchVideo(
+	videoId: string
+): Promise<{ url: string; token: string; videoName: string }> {
 	const response = await axios.get(
 		`${WATCH_SERVICE_API_URL}/video/${videoId}`
 	);

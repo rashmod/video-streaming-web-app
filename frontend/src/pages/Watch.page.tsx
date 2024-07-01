@@ -23,7 +23,29 @@ function Watch() {
 			<h2 className='text-2xl'>Watch Page</h2>
 			{isLoading && <p>Loading...</p>}
 			{isError && <p>Error</p>}
-			{!isLoading && !isError && <ReactPlayer url={data.url} controls />}
+			{!isLoading && !isError && data && (
+				<ReactPlayer
+					url={data.url}
+					config={{
+						file: {
+							hlsOptions: {
+								xhrSetup: function xhrSetup(
+									xhr: {
+										open: (
+											method: string,
+											url: string
+										) => void;
+									},
+									url: string
+								) {
+									xhr.open('GET', url + data.token);
+								},
+							},
+						},
+					}}
+					controls
+				/>
+			)}
 		</>
 	);
 }
