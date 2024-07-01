@@ -4,10 +4,6 @@ import { z } from 'zod';
 // todo kafka topic in env
 
 const schema = z.object({
-	HOST: z.string().trim().min(1),
-	PORT: z.coerce.number().int().positive(),
-	NODE_ENV: z.enum(['DEVELOPMENT', 'PRODUCTION', 'TEST']),
-
 	AWS_ACCESS_KEY: z.string().trim().min(1),
 	AWS_SECRET_ACCESS_KEY: z.string().trim().min(1),
 
