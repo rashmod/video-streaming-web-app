@@ -8,12 +8,6 @@ const schema = z.object({
 	PORT: z.coerce.number().int().positive(),
 	NODE_ENV: z.enum(['DEVELOPMENT', 'PRODUCTION', 'TEST']),
 
-	AWS_ACCESS_KEY: z.string().trim().min(1),
-	AWS_SECRET_ACCESS_KEY: z.string().trim().min(1),
-
-	AWS_REGION: z.string().trim().min(1),
-	AWS_BUCKET_NAME: z.string().trim().min(1),
-
 	AWS_CLOUDFRONT_URL: z.string().trim().min(1),
 	AWS_CLOUDFRONT_KEY_PAIR_ID: z.string().trim().min(1),
 	AWS_CLOUDFRONT_PRIVATE_KEY: z.string().trim().min(1),
