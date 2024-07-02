@@ -1,7 +1,9 @@
-import formatDuration from '@/utilities/formatDuration';
-import formatViews from '@/utilities/formatViews';
 import { Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+import { cn } from '@/lib/utils';
+import formatDuration from '@/utilities/formatDuration';
+import formatViews from '@/utilities/formatViews';
 
 type PreviewProps = {
 	videoId: string;
@@ -13,6 +15,7 @@ type PreviewProps = {
 	channelId: string;
 	views: number;
 	uploadedAt: Date;
+	compact?: boolean;
 };
 
 export default function Preview({
@@ -25,12 +28,16 @@ export default function Preview({
 	channelId,
 	views,
 	uploadedAt,
+	compact = false,
 }: PreviewProps) {
+	// todo add image placeholder for lazy loading
 	return (
-		<Link to={`/watch?videoId=${videoId}`}>
+		<Link
+			to={`/watch?videoId=${videoId}`}
+			className={cn({ 'flex gap-x-2': compact })}>
 			<div className='relative overflow-hidden rounded-lg group'>
-				<div className='absolute inset-0 grid w-full h-full text-white opacity-0 place-items-center bg-black/50 group-hover:opacity-100'>
-					<Play className='w-12 h-12' />
+				<div className='absolute inset-0 grid text-white opacity-0 place-items-center bg-black/50 group-hover:opacity-100'>
+					<Play className={cn('w-12 h-12', { 'w-6 h-6': compact })} />
 				</div>
 				<img src={imageUrl} alt='' />
 				<span className='absolute px-2 py-1 text-sm font-medium text-white rounded-md bg-gray-900/70 bottom-3 right-3'>
@@ -38,15 +45,20 @@ export default function Preview({
 				</span>
 			</div>
 			<div className='flex gap-2 mt-2'>
-				<Link to={`/channel/${channelId}`} className=''>
-					<img
-						src={channelAvatarUrl}
-						alt=''
-						className='object-cover object-center w-32 rounded-full'
-					/>
-				</Link>
+				{!compact && (
+					<Link to={`/channel/${channelId}`} className=''>
+						<img
+							src={channelAvatarUrl}
+							alt=''
+							className='object-cover object-center w-32 rounded-full'
+						/>
+					</Link>
+				)}
 				<div className='flex flex-col'>
-					<div className='text-lg font-medium line-clamp-1'>
+					<div
+						className={cn('text-lg font-medium line-clamp-1', {
+							'text-base': compact,
+						})}>
 						{title}
 					</div>
 					<Link
