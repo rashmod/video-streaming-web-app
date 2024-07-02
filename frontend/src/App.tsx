@@ -7,10 +7,10 @@ const queryClient = new QueryClient();
 
 function App() {
 	return (
-		<main className='min-h-screen'>
+		<main className='flex flex-col min-h-screen'>
 			<QueryClientProvider client={queryClient}>
 				<Navbar />
-				<main className='container'>
+				<main className='container grow'>
 					<Outlet />
 				</main>
 				<div className='sticky bottom-0 left-0 z-10 flex items-center justify-around w-full py-3 bg-white shadow-t dark:bg-gray-950'>

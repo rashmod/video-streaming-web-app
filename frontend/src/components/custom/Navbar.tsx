@@ -6,7 +6,7 @@ import SearchBox from './SearchBox';
 
 export default function Navbar() {
 	return (
-		<header className='sticky top-0 z-10 flex items-center justify-between w-full px-4 py-3 bg-white shadow-sm text-gray-950 dark:text-white dark:bg-gray-950 sm:px-6 md:px-8 lg:px-10'>
+		<header className='sticky top-0 z-10 flex items-center justify-between w-full px-4 py-3 mb-5 bg-white shadow-sm text-gray-950 dark:text-white dark:bg-gray-950 sm:px-6 md:px-8 lg:px-10'>
 			<Link to='#' className='flex items-center gap-2'>
 				<MonitorPause className='w-6 h-6' />
 				<span className='text-xl font-semibold'>Streamline</span>

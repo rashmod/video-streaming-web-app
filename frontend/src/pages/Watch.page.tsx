@@ -1,7 +1,7 @@
-import ReactPlayer from 'react-player';
 import { useQuery } from 'react-query';
 
 import watch from '../api/watch';
+import VideoPlayer from '@/components/custom/VideoPlayer';
 
 function Watch() {
 	const videoId = '123';
@@ -19,33 +19,15 @@ function Watch() {
 
 	return (
 		<>
-			<h1 className='text-3xl font-bold underline'>Youtube Clone</h1>
-			<h2 className='text-2xl'>Watch Page</h2>
-			{isLoading && <p>Loading...</p>}
-			{isError && <p>Error</p>}
-			{!isLoading && !isError && data && (
-				<ReactPlayer
-					url={data.url}
-					config={{
-						file: {
-							hlsOptions: {
-								xhrSetup: function xhrSetup(
-									xhr: {
-										open: (
-											method: string,
-											url: string
-										) => void;
-									},
-									url: string
-								) {
-									xhr.open('GET', url + data.token);
-								},
-							},
-						},
-					}}
-					controls
-				/>
-			)}
+			<div className='grid w-full grid-cols-5 gap-4'>
+				{isLoading && <p>Loading...</p>}
+				{isError && <p>Error</p>}
+				{!isLoading && !isError && data && (
+					<div className='col-span-3'>
+						<VideoPlayer url={data.url} token={data.token} />
+					</div>
+				)}
+			</div>
 		</>
 	);
 }
