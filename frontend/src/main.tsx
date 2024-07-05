@@ -8,6 +8,7 @@ import App from './App';
 import Home from './pages/Home.page';
 import Watch from './pages/Watch.page';
 import Upload from './pages/Upload.page';
+import LogIn from './pages/LogIn.page';
 
 const router = createBrowserRouter([
 	{
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
 			{
 				path: '/upload',
 				element: <Upload />,
+			},
+			{
+				path: '/log-in',
+				element: <LogIn />,
 			},
 		],
 	},

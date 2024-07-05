@@ -9,11 +9,11 @@ function App() {
 	return (
 		<main className='flex flex-col min-h-screen'>
 			<QueryClientProvider client={queryClient}>
-				<main className='container grow'>
+				<section className='container flex flex-col grow'>
 					<Navbar>
 						<Outlet />
 					</Navbar>
-				</main>
+				</section>
 			</QueryClientProvider>
 		</main>
 	);
