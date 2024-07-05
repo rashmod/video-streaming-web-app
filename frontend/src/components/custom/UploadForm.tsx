@@ -8,6 +8,7 @@ import FileUpload from './FileUpload';
 import formatFileSize from '@/utilities/formatFileSize';
 import { THUMBNAIL_MAX_FILE_SIZE } from '@/constants/constants';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const schema = z.object({
 	title: z.string().trim().min(5, 'Title must be at least 5 characters long'),
@@ -63,8 +64,11 @@ export default function UploadForm({
 		resolver: zodResolver(schema),
 	});
 
+	const navigate = useNavigate();
+
 	const onSubmit: SubmitHandler<Schema> = async (data) => {
 		await handleUpload(data);
+		navigate('/');
 	};
 
 	return (
