@@ -4,11 +4,21 @@ import envConfig from '../config/env.config';
 
 const UPLOAD_SERVICE_API_URL = envConfig.VITE_UPLOAD_SERVICE_API_URL;
 
-async function initializeUpload(extension: string): Promise<{
+async function initializeUpload({
+	title,
+	thumbnail,
+	extension,
+}: {
+	title: string;
+	thumbnail: File;
+	extension: string;
+}): Promise<{
 	uploadId: string;
 	videoId: string;
 }> {
 	const response = await axios.post(`${UPLOAD_SERVICE_API_URL}/initialize`, {
+		title,
+		thumbnail,
 		extension,
 	});
 	console.log(response);

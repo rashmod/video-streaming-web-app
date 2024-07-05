@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useMutation } from 'react-query';
 
 import upload from '../api/upload';
@@ -8,13 +7,9 @@ import chunkFile from '../utilities/chunkFile';
 import createUploadFormData from '../utilities/createUploadFormData';
 
 import { CHUNK_SIZE } from '@/constants/constants';
-import { FileWithUrl } from '@/types/types';
-import UploadForm from '@/components/custom/UploadForm';
+import UploadForm, { type Schema } from '@/components/custom/UploadForm';
 
 export default function Upload() {
-	const [video, setVideo] = useState<FileWithUrl | null>(null);
-	const [thumbnail, setThumbnail] = useState<FileWithUrl | null>(null);
-
 	const { mutateAsync: initializeUpload } = useMutation({
 		mutationFn: upload.initializeUpload,
 	});
@@ -27,12 +22,20 @@ export default function Upload() {
 		mutationFn: upload.completeUpload,
 	});
 
-	async function handleUpload(file: File) {
-		const extension = getFileExtension(file.name);
-		const initResponse = await initializeUpload(extension);
+	async function handleUpload(formData: Schema) {
+		const video = formData.video.file;
+		const thumbnail = formData.thumbnail.file;
+		const title = formData.title;
+
+		const extension = getFileExtension(video.name);
+		const initResponse = await initializeUpload({
+			title,
+			thumbnail,
+			extension,
+		});
 		const { uploadId, videoId } = initResponse;
 
-		const chunks = chunkFile(file, CHUNK_SIZE);
+		const chunks = chunkFile(video, CHUNK_SIZE);
 		const uploadRequest = chunks.map((chunk, i) =>
 			uploadVideo(
 				createUploadFormData({
@@ -58,13 +61,7 @@ export default function Upload() {
 
 	return (
 		<>
-			<UploadForm
-				video={video}
-				setVideo={setVideo}
-				thumbnail={thumbnail}
-				setThumbnail={setThumbnail}
-				handleUpload={handleUpload}
-			/>
+			<UploadForm handleUpload={handleUpload} />
 		</>
 	);
 }

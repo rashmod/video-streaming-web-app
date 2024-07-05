@@ -7,8 +7,7 @@ import FileUpload from './FileUpload';
 
 import formatFileSize from '@/utilities/formatFileSize';
 import { THUMBNAIL_MAX_FILE_SIZE } from '@/constants/constants';
-import { FileWithUrl } from '@/types/types';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 
 const schema = z.object({
 	title: z.string().trim().min(5, 'Title must be at least 5 characters long'),
@@ -46,13 +45,7 @@ const defaultFormValues: DefaultValues<Schema> = {
 
 export type Schema = z.infer<typeof schema>;
 
-export default function UploadForm({
-	video,
-	setVideo,
-	thumbnail,
-	setThumbnail,
-	handleUpload,
-}: UploadFormProps) {
+export default function UploadForm({ handleUpload }: UploadFormProps) {
 	const {
 		register,
 		trigger,
@@ -67,12 +60,8 @@ export default function UploadForm({
 	});
 
 	const onSubmit: SubmitHandler<Schema> = async (data) => {
-		console.log(data);
-		if (!video) return;
-		await handleUpload(video.file);
+		await handleUpload(data);
 	};
-
-	console.log(errors);
 
 	return (
 		<form
@@ -99,8 +88,6 @@ export default function UploadForm({
 				type='video'
 				acceptedFileTypes='video/*'
 				Icon={Clapperboard}
-				setFile={setVideo}
-				file={video}
 				title='Click to upload or drag and drop video'
 				subtitle='Any video format'
 				id='video'
@@ -116,8 +103,6 @@ export default function UploadForm({
 				type='image'
 				acceptedFileTypes='image/*'
 				Icon={Image}
-				file={thumbnail}
-				setFile={setThumbnail}
 				title='Click to upload or drag and drop thumbnail'
 				subtitle={`Any image format. Max size: ${formatFileSize(
 					THUMBNAIL_MAX_FILE_SIZE
@@ -133,9 +118,5 @@ export default function UploadForm({
 }
 
 type UploadFormProps = {
-	video: FileWithUrl | null;
-	setVideo: React.Dispatch<React.SetStateAction<FileWithUrl | null>>;
-	thumbnail: FileWithUrl | null;
-	setThumbnail: React.Dispatch<React.SetStateAction<FileWithUrl | null>>;
-	handleUpload: (file: File) => Promise<void>;
+	handleUpload: (formaData: Schema) => Promise<void>;
 };

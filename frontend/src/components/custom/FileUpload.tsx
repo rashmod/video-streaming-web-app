@@ -165,8 +165,6 @@ type CommonProps = {
 	Icon: React.ForwardRefExoticComponent<
 		LucideProps & React.RefAttributes<SVGSVGElement>
 	>;
-	setFile: React.Dispatch<React.SetStateAction<FileWithUrl | null>>;
-	file: FileWithUrl | null;
 	title: string;
 	subtitle: string;
 	id: string;
