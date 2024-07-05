@@ -1,32 +1,42 @@
-import {
-	ChangeEvent,
-	DragEvent,
-	ForwardRefExoticComponent,
-	RefAttributes,
-	useState,
-} from 'react';
+import { useState } from 'react';
 import { LucideProps, Trash2 } from 'lucide-react';
+import {
+	FieldError,
+	UseFormRegister,
+	UseFormResetField,
+	UseFormSetValue,
+	UseFormTrigger,
+	UseFormWatch,
+} from 'react-hook-form';
 
 import { cn } from '@/lib/utils';
 import processFiles from '@/utilities/processFiles';
-
-import { FileWithUrl } from '@/types/types';
+import { type FileWithUrl } from '@/types/types';
+import { type Schema } from '@/components/custom/UploadForm';
 
 export default function FileUpload({
 	type,
 	acceptedFileTypes,
 	Icon,
-	file,
-	setFile,
 	title,
 	subtitle,
 	id,
+	register,
+	name,
+	error,
+	setValue,
+	resetField,
+	trigger,
+	watch,
 	...rest
 }: FileUpload) {
 	const [dragActive, setDragActive] = useState(false);
 
 	function selectFile(file: FileWithUrl | undefined) {
-		if (file && file.file.type.match(acceptedFileTypes)) setFile(file);
+		if (!file) return;
+
+		setValue(name, file);
+		trigger(name);
 	}
 
 	function handleFiles(files: FileList) {
@@ -39,12 +49,12 @@ export default function FileUpload({
 		}
 	}
 
-	function handleChange(event: ChangeEvent<HTMLInputElement>) {
+	function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
 		if (!event.target.files) return;
 		handleFiles(event.target.files);
 	}
 
-	function handleDrop(event: DragEvent<HTMLLabelElement>) {
+	function handleDrop(event: React.DragEvent<HTMLLabelElement>) {
 		event.preventDefault();
 		event.stopPropagation();
 
@@ -55,7 +65,7 @@ export default function FileUpload({
 		event.dataTransfer.clearData();
 	}
 
-	function handleDrag(event: DragEvent<HTMLLabelElement>) {
+	function handleDrag(event: React.DragEvent<HTMLLabelElement>) {
 		event.preventDefault();
 		event.stopPropagation();
 
@@ -75,15 +85,19 @@ export default function FileUpload({
 		}
 	}
 
+	const file = watch(name);
+
 	return (
-		<div className='mb-5 rounded-xl min-h-32'>
-			{!file ? (
+		<div className='rounded-xl min-h-32'>
+			{!file.file ? (
 				<>
 					<input
+						{...register(name, {
+							onChange: handleChange,
+						})}
 						type='file'
 						accept={acceptedFileTypes}
 						className='hidden'
-						onChange={handleChange}
 						id={id}
 					/>
 					<label
@@ -106,35 +120,34 @@ export default function FileUpload({
 					</label>
 				</>
 			) : (
-				<div className='p-3'>
-					<div className='w-full mx-auto'>
-						<div
-							key={file.localURL}
-							className='relative w-full h-full aspect-video group'>
-							{type === 'video' && (
-								<video
-									src={file.localURL}
-									className='object-cover w-full h-full rounded-md min-w-32'
-									controls
-								/>
-							)}
-							{type === 'image' && (
-								<img
-									src={file.localURL}
-									className='object-cover w-full rounded-md min-w-32'
-									loading='lazy'
-								/>
-							)}
-							<div className='absolute top-0 right-0 flex items-center justify-center w-12 gap-4 text-white transition duration-200 origin-top-right bg-black rounded-md bg-opacity-90 hover:bg-opacity-100 aspect-square hover:scale-150'>
-								<Trash2
-									className='hover:text-red-400'
-									onClick={() => setFile(null)}
-								/>
-							</div>
+				<div className='w-full mx-auto'>
+					<div
+						key={file.localURL}
+						className='relative w-full h-full aspect-video group'>
+						{type === 'video' && (
+							<video
+								src={file.localURL}
+								className='object-cover w-full h-full rounded-md min-w-32'
+								controls
+							/>
+						)}
+						{type === 'image' && (
+							<img
+								src={file.localURL}
+								className='object-cover w-full rounded-md min-w-32'
+								loading='lazy'
+							/>
+						)}
+						<div className='absolute top-0 right-0 flex items-center justify-center w-12 gap-4 text-white transition duration-200 origin-top-right bg-black rounded-md opacity-70 hover:bg-opacity-100 aspect-square group-hover:opacity-90 hover:scale-150 bg-opacity-90'>
+							<Trash2
+								className='hover:text-red-400'
+								onClick={() => resetField(name)}
+							/>
 						</div>
 					</div>
 				</div>
 			)}
+			{error && <p className='text-red-500'>{error.message}</p>}
 		</div>
 	);
 }
@@ -149,11 +162,20 @@ type VideoUpload = {
 	acceptedFileTypes: 'video/*';
 };
 type CommonProps = {
-	Icon: ForwardRefExoticComponent<LucideProps & RefAttributes<SVGSVGElement>>;
+	Icon: React.ForwardRefExoticComponent<
+		LucideProps & React.RefAttributes<SVGSVGElement>
+	>;
 	setFile: React.Dispatch<React.SetStateAction<FileWithUrl | null>>;
 	file: FileWithUrl | null;
 	title: string;
 	subtitle: string;
 	id: string;
+	register: UseFormRegister<Schema>;
+	name: keyof Pick<Schema, 'video' | 'thumbnail'>;
+	error: FieldError | undefined;
+	setValue: UseFormSetValue<Schema>;
+	resetField: UseFormResetField<Schema>;
+	trigger: UseFormTrigger<Schema>;
+	watch: UseFormWatch<Schema>;
 };
 type FileUpload = CommonProps & (ImageUpload | VideoUpload);
