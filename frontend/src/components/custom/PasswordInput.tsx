@@ -8,11 +8,16 @@ import { cn } from '@/lib/utils';
 const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
 	({ className, ...props }, ref) => {
 		const [showPassword, setShowPassword] = useState(false);
-		const disabled =
-			props.value === '' || props.value === undefined || props.disabled;
+		const disabled = props.value === undefined || props.disabled;
 
 		return (
 			<div className='relative'>
+				<Input
+					type={showPassword ? 'text' : 'password'}
+					className={cn('hide-password-toggle pr-10', className)}
+					ref={ref}
+					{...props}
+				/>
 				<Button
 					type='button'
 					variant='ghost'
@@ -29,13 +34,6 @@ const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
 						{showPassword ? 'Hide password' : 'Show password'}
 					</span>
 				</Button>
-				<Input
-					type={showPassword ? 'text' : 'password'}
-					className={cn('hide-password-toggle pr-10', className)}
-					ref={ref}
-					{...props}
-				/>
-
 				{/* hides browsers password toggles */}
 				<style>{`
 					.hide-password-toggle::-ms-reveal,
