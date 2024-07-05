@@ -45,7 +45,11 @@ const defaultFormValues: DefaultValues<Schema> = {
 
 export type Schema = z.infer<typeof schema>;
 
-export default function UploadForm({ handleUpload }: UploadFormProps) {
+export default function UploadForm({
+	handleUpload,
+}: {
+	handleUpload: (formaData: Schema) => Promise<void>;
+}) {
 	const {
 		register,
 		trigger,
@@ -116,7 +120,3 @@ export default function UploadForm({ handleUpload }: UploadFormProps) {
 		</form>
 	);
 }
-
-type UploadFormProps = {
-	handleUpload: (formaData: Schema) => Promise<void>;
-};
