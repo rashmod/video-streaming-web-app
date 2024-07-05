@@ -37,14 +37,14 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
 							Log Out
 						</Button>
 					</Link> */}
-					{/* <Link to='/register'>
+					<Link to='/register'>
 						<Button
 							size='sm'
 							variant='outline'
 							className='border-2'>
 							Register
 						</Button>
-					</Link> */}
+					</Link>
 					<Link to='/log-in'>
 						<Button size='sm' variant='default'>
 							Log In

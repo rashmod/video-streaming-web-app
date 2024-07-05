@@ -23,22 +23,34 @@ import {
 import { Button } from '@/components/ui/button';
 import { PasswordInput } from '@/components/custom/PasswordInput';
 
-const schema = z.object({
-	email: z.string().email(),
-	password: z.string().min(8).max(30),
-});
+const schema = z
+	.object({
+		username: z.string().min(3).max(30),
+		email: z.string().email(),
+		password: z.string().min(8).max(30),
+		confirmPassword: z.string(),
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		message: 'Passwords do not match',
+		path: ['confirmPassword'],
+	});
 
-type LogInSchema = z.infer<typeof schema>;
+type RegisterSchema = z.infer<typeof schema>;
 
-export default function LogIn() {
-	const form = useForm<LogInSchema>({
-		defaultValues: { email: '', password: '' },
+export default function Register() {
+	const form = useForm<RegisterSchema>({
+		defaultValues: {
+			username: '',
+			email: '',
+			password: '',
+			confirmPassword: '',
+		},
 		resolver: zodResolver(schema),
 	});
 
 	const navigate = useNavigate();
 
-	const onSubmit: SubmitHandler<LogInSchema> = (data) => {
+	const onSubmit: SubmitHandler<RegisterSchema> = (data) => {
 		console.log(data);
 		navigate('/');
 	};
@@ -46,9 +58,9 @@ export default function LogIn() {
 	return (
 		<Card className='max-w-sm mx-auto'>
 			<CardHeader className='space-y-1'>
-				<CardTitle className='text-2xl font-bold'>Log In</CardTitle>
+				<CardTitle className='text-2xl font-bold'>Register</CardTitle>
 				<CardDescription>
-					Enter your email and password to login to your account
+					Enter your details to create your account
 				</CardDescription>
 			</CardHeader>
 
@@ -57,6 +69,23 @@ export default function LogIn() {
 					<form
 						className='space-y-4'
 						onSubmit={form.handleSubmit(onSubmit)}>
+						<FormField
+							control={form.control}
+							name='username'
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Username</FormLabel>
+									<FormControl>
+										<Input
+											placeholder='John Doe'
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
 						<FormField
 							control={form.control}
 							name='email'
@@ -88,6 +117,20 @@ export default function LogIn() {
 							)}
 						/>
 
+						<FormField
+							control={form.control}
+							name='confirmPassword'
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Confirm Password</FormLabel>
+									<FormControl>
+										<PasswordInput {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
 						<Button type='submit' className='w-full'>
 							Login
 						</Button>
@@ -97,10 +140,10 @@ export default function LogIn() {
 
 			<CardFooter>
 				<p className='text-sm text-center'>
-					Don't have an account?
-					<Link to='/register'>
+					Already have an account?
+					<Link to='/log-in'>
 						<Button variant='link' size='sm' className='pl-1'>
-							Register
+							Log In
 						</Button>
 					</Link>
 				</p>

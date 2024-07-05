@@ -9,6 +9,7 @@ import Home from './pages/Home.page';
 import Watch from './pages/Watch.page';
 import Upload from './pages/Upload.page';
 import LogIn from './pages/LogIn.page';
+import Register from './pages/Register.page';
 
 const router = createBrowserRouter([
 	{
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
 			{
 				path: '/log-in',
 				element: <LogIn />,
+			},
+			{
+				path: '/register',
+				element: <Register />,
 			},
 		],
 	},
