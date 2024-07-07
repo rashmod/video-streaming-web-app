@@ -1,4 +1,4 @@
 export type FileWithUrl = {
-	file: File;
-	localURL: string;
+  file: File;
+  localURL: string;
 };
