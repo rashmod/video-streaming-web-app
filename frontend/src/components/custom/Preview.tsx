@@ -5,6 +5,8 @@ import { cn } from '@/lib/utils';
 import formatDuration from '@/utilities/formatDuration';
 import formatViews from '@/utilities/formatViews';
 
+import LazyImage from '@/components/custom/LazyImage';
+
 type PreviewProps = {
 	videoId: string;
 	imageUrl: string;
@@ -35,11 +37,11 @@ export default function Preview({
 		<Link
 			to={`/watch?videoId=${videoId}`}
 			className={cn({ 'flex gap-x-2': compact })}>
-			<div className='relative overflow-hidden rounded-lg group'>
+			<div className='relative flex w-full overflow-hidden rounded-lg aspect-video group'>
 				<div className='absolute inset-0 grid text-white opacity-0 place-items-center bg-black/50 group-hover:opacity-100'>
 					<Play className={cn('w-12 h-12', { 'w-6 h-6': compact })} />
 				</div>
-				<img src={imageUrl} alt='' />
+				<LazyImage src={imageUrl} alt={title} />
 				<span className='absolute px-2 py-1 text-sm font-medium text-white rounded-md bg-gray-900/70 bottom-3 right-3'>
 					{formatDuration(duration)}
 				</span>
