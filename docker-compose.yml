@@ -24,6 +24,40 @@ services:
             - kafka
         restart: on-failure:10
 
+    postgres:
+        image: postgres
+        ports:
+            - '5432:5432'
+        env_file:
+            - ./backend/user_service/.env
+
+    # frontend:
+    #     build: ./frontend
+    #     ports:
+    #         - '5173:5173'
+    #     env_file:
+    #         - ./frontend/.env
+
+    # upload-service:
+    #     build: ./backend/upload_service
+    #     ports:
+    #         - '3000:3000'
+    #     depends_on:
+    #         - kafka-admin
+    #     env_file:
+    #         - ./backend/upload_service/.env
+    #     restart: on-failure:10
+
+    # watch-service:
+    #     build: ./backend/watch_service
+    #     ports:
+    #         - '3001:3001'
+    #     depends_on:
+    #         - kafka-admin
+    #     env_file:
+    #         - ./backend/watch_service/.env
+    #     restart: on-failure:10
+
     transcode-service:
         build: ./backend/transcode_service
         env_file:
