@@ -3,6 +3,8 @@ version: '3'
 services:
     zookeeper:
         image: zookeeper
+        profiles:
+            - dev
 
     kafka:
         image: confluentinc/cp-kafka
@@ -17,19 +19,28 @@ services:
             KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
         depends_on:
             - zookeeper
+        profiles:
+            - dev
 
     kafka-admin:
         build: ./backend/kafka
         depends_on:
             - kafka
         restart: on-failure:10
+        profiles:
+            - dev
 
     postgres:
         image: postgres
         ports:
-            - '5432:5432'
+            - '5433:5432'
         env_file:
             - ./backend/user_service/.env
+        volumes:
+            - ./backend/user_service/db-data:/var/lib/postgresql/data
+        profiles:
+            - dev
+            - db-migrate
 
     # frontend:
     #     build: ./frontend
@@ -69,3 +80,44 @@ services:
             - kafka-admin
         restart: on-failure:10
         entrypoint: ['wait-for-entrypoint.sh', 'kafka', 'npm', 'run', 'dev']
+        profiles:
+            - dev
+
+    # user-service-dev:
+    #     build: ./backend/user_service
+    #     env_file:
+    #         - ./backend/user_service/.env
+    #     volumes:
+    #         - ./backend/user_service:/app
+    #         - /app/node_modules
+    #     restart: on-failure:10
+    #     profiles:
+    #         - dev
+    #     depends_on:
+    #         - postgres
+
+    # user-service-db-generate:
+    #     build: ./backend/user_service
+    #     env_file:
+    #         - ./backend/user_service/.env
+    #     volumes:
+    #         - ./backend/user_service:/app
+    #         - /app/node_modules
+    #     restart: on-failure:10
+    #     command: ['npm', 'run', 'db:generate']
+    #     profiles:
+    #         - db-generate
+
+    # user-service-db-migrate:
+    #     build: ./backend/user_service
+    #     env_file:
+    #         - ./backend/user_service/.env
+    #     volumes:
+    #         - ./backend/user_service:/app
+    #         - /app/node_modules
+    #     restart: on-failure:10
+    #     command: ['npm', 'run', 'db:migrate']
+    #     profiles:
+    #         - db-migrate
+    #     depends_on:
+    #         - postgres
