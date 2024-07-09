@@ -4,13 +4,6 @@ import { z } from 'zod';
 
 expand(config());
 
-const stringBoolean = z.coerce
-	.string()
-	.transform((val) => {
-		return val === 'true';
-	})
-	.default('false');
-
 const schema = z
 	.object({
 		HOST: z.string().trim().min(1),
