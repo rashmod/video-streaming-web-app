@@ -3,7 +3,7 @@ import { pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 
 import video from './video.schema';
 
-const channel = pgTable('channels', {
+const user = pgTable('users', {
 	id: uuid('id').defaultRandom().primaryKey(),
 	name: varchar('name', { length: 255 }).notNull(),
 	avatarUrl: varchar('avatar_url', { length: 255 }),
@@ -15,8 +15,8 @@ const channel = pgTable('channels', {
 		.defaultNow(),
 });
 
-export const channelRelations = relations(channel, ({ many }) => ({
+export const userRelations = relations(user, ({ many }) => ({
 	videos: many(video),
 }));
 
-export default channel;
+export default user;

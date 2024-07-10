@@ -7,7 +7,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
-import channel from './channel.schema';
+import user from './user.schema';
 
 const video = pgTable('video', {
 	id: uuid('id').defaultRandom().primaryKey(),
@@ -22,15 +22,15 @@ const video = pgTable('video', {
 		.notNull()
 		.defaultNow(),
 
-	channelId: uuid('channel_id')
+	userId: uuid('user_id')
 		.notNull()
-		.references(() => channel.id),
+		.references(() => user.id),
 });
 
 export const videoRelations = relations(video, ({ one }) => ({
-	channel: one(channel, {
-		fields: [video.channelId],
-		references: [channel.id],
+	user: one(user, {
+		fields: [video.userId],
+		references: [user.id],
 	}),
 }));
 

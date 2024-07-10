@@ -1,4 +1,4 @@
-export { default as channel, channelRelations } from './channel.schema';
+export { default as user, userRelations } from './user.schema';
 export { default as video, videoRelations } from './video.schema';
 export {
 	default as videoState,

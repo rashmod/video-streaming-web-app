@@ -1,52 +1,9 @@
 {
-  "id": "e01a112a-7178-4a1d-9703-37501acea26b",
+  "id": "4b9c6807-b8db-41ae-95c6-458efe68bfa0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.channels": {
-      "name": "channels",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "avatar_url": {
-          "name": "avatar_url",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "public.resolution": {
       "name": "resolution",
       "schema": "",
@@ -284,6 +241,49 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "avatar_url": {
+          "name": "avatar_url",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.video": {
       "name": "video",
       "schema": "",
@@ -333,8 +333,8 @@
           "notNull": true,
           "default": "now()"
         },
-        "channel_id": {
-          "name": "channel_id",
+        "user_id": {
+          "name": "user_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -342,12 +342,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "video_channel_id_channels_id_fk": {
-          "name": "video_channel_id_channels_id_fk",
+        "video_user_id_users_id_fk": {
+          "name": "video_user_id_users_id_fk",
           "tableFrom": "video",
-          "tableTo": "channels",
+          "tableTo": "users",
           "columnsFrom": [
-            "channel_id"
+            "user_id"
           ],
           "columnsTo": [
             "id"
