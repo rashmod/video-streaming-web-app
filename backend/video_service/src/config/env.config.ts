@@ -16,6 +16,16 @@ const schema = z
 		DB_NAME: z.string().trim().min(1),
 		DB_PORT: z.coerce.number().int().positive(),
 		DB_URL: z.string().trim().min(1),
+
+		AWS_ACCESS_KEY: z.string().trim().min(1),
+		AWS_SECRET_ACCESS_KEY: z.string().trim().min(1),
+
+		AWS_S3_REGION: z.string().trim().min(1),
+		AWS_S3_BUCKET_NAME: z.string().trim().min(1),
+
+		AWS_CLOUDFRONT_URL: z.string().trim().min(1),
+		AWS_CLOUDFRONT_KEY_PAIR_ID: z.string().trim().min(1),
+		AWS_CLOUDFRONT_PRIVATE_KEY: z.string().trim().min(1),
 	})
 	.refine(
 		(data) =>

@@ -1,5 +1,6 @@
 import VideoRepository from '../repositories/video.repository';
-import { NewVideo } from '../types/video.types';
+import MediaService from './media.service';
+import { type NewVideo } from '../types/video.types';
 
 export default class VideoService {
 	static async getVideoById(id: string) {
@@ -8,7 +9,12 @@ export default class VideoService {
 			throw new Error('Video not found');
 		}
 
-		return video;
+		const thumbnailUrl = MediaService.getThumbnailSignedUrl(
+			video.thumbnailName
+		);
+		const videoUrl = MediaService.getVideoSignedUrl(video.videoName);
+
+		return { ...video, thumbnailUrl, videoUrl };
 	}
 
 	static async updateVideo(
@@ -25,7 +31,12 @@ export default class VideoService {
 			throw new Error('Failed to update video');
 		}
 
-		return updatedVideo;
+		const thumbnailUrl = MediaService.getThumbnailSignedUrl(
+			video.thumbnailName
+		);
+		const videoUrl = MediaService.getVideoSignedUrl(video.videoName);
+
+		return { ...updatedVideo, thumbnailUrl, videoUrl };
 	}
 
 	static async deleteVideo(id: string) {

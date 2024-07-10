@@ -12,6 +12,7 @@ export default class VideoRepository {
 				title: video.title,
 				duration: video.duration,
 				thumbnailName: video.thumbnailName,
+				videoName: video.videoName,
 				createdAt: video.createdAt,
 			})
 			.from(video)
@@ -33,6 +34,7 @@ export default class VideoRepository {
 				title: video.title,
 				duration: video.duration,
 				thumbnailName: video.thumbnailName,
+				videoName: video.videoName,
 				createdAt: video.createdAt,
 			});
 
@@ -48,6 +50,7 @@ export default class VideoRepository {
 				title: video.title,
 				duration: video.duration,
 				thumbnailName: video.thumbnailName,
+				videoName: video.videoName,
 				createdAt: video.createdAt,
 			});
 
