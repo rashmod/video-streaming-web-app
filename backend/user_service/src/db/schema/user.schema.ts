@@ -7,6 +7,8 @@ const user = pgTable('users', {
 	id: uuid('id').defaultRandom().primaryKey(),
 	name: varchar('name', { length: 255 }).notNull(),
 	avatarUrl: varchar('avatar_url', { length: 255 }),
+	email: varchar('email', { length: 255 }).notNull(),
+	password: varchar('password', { length: 255 }).notNull(),
 	createdAt: timestamp('created_at', { mode: 'string' })
 		.notNull()
 		.defaultNow(),
