@@ -8,6 +8,7 @@ import {
 import { relations } from 'drizzle-orm';
 
 import videoState from './videoState.schema';
+import video from './video.schema';
 
 const uploadProgress = pgTable('upload_progress', {
 	id: uuid('id').defaultRandom().primaryKey(),
@@ -25,13 +26,13 @@ const uploadProgress = pgTable('upload_progress', {
 
 	videoId: uuid('video_id')
 		.notNull()
-		.references(() => videoState.videoId),
+		.references(() => video.id),
 });
 
 export const uploadProgressRelations = relations(uploadProgress, ({ one }) => ({
-	videoState: one(videoState, {
+	video: one(video, {
 		fields: [uploadProgress.videoId],
-		references: [videoState.videoId],
+		references: [video.id],
 	}),
 }));
 

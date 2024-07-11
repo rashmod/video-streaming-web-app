@@ -3,6 +3,7 @@ import { relations } from 'drizzle-orm';
 
 import videoState from './videoState.schema';
 import resolution from './resolution.schema';
+import video from './video.schema';
 
 export const transcodingStatus = pgEnum('transcoding_status', [
 	'PENDING',
@@ -22,7 +23,7 @@ const transcodingProgress = pgTable('transcoding_progress', {
 
 	videoId: uuid('video_id')
 		.notNull()
-		.references(() => videoState.videoId),
+		.references(() => video.id),
 	resolutionId: uuid('resolution_id')
 		.notNull()
 		.references(() => resolution.id),
@@ -31,9 +32,9 @@ const transcodingProgress = pgTable('transcoding_progress', {
 export const transcodingProgressRelations = relations(
 	transcodingProgress,
 	({ one }) => ({
-		videoState: one(videoState, {
+		video: one(video, {
 			fields: [transcodingProgress.videoId],
-			references: [videoState.videoId],
+			references: [video.id],
 		}),
 		resolution: one(resolution, {
 			fields: [transcodingProgress.resolutionId],
