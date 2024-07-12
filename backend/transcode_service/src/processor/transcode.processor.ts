@@ -18,7 +18,7 @@ type TranscodeRequest = {
 	videoId: string;
 };
 
-export default async function transcodeController(
+export default async function transcodeProcessor(
 	str: string | undefined,
 	resumeConsumer: () => void
 ) {
