@@ -23,7 +23,16 @@ export default class UploadProgressRepository {
 		return result;
 	}
 
-	static async updateUploadProgress(id: string) {
+	static async getUploadProgressByVideoId(videoId: string) {
+		const [result] = await db
+			.select()
+			.from(uploadProgress)
+			.where(eq(uploadProgress.videoId, videoId));
+
+		return result;
+	}
+
+	static async incrementUploadProgress(id: string) {
 		const [result] = await db
 			.update(uploadProgress)
 			.set({

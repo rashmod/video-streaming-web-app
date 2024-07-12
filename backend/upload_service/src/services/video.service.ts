@@ -42,4 +42,13 @@ export default class VideoService {
 
 		return video;
 	}
+
+	static async getVideoById(id: string) {
+		const video = await VideoRepository.getVideoById(id);
+		if (!video) {
+			throw new Error('Video not found.');
+		}
+
+		return video;
+	}
 }

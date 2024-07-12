@@ -1,12 +1,10 @@
 import VideoStateRepository from '../repositories/videoState.repository';
-import { NewVideoState } from '../types/types';
 
 export default class VideoStateService {
-	static async createVideoState({ videoId }: NewVideoState) {
+	static async createVideoState(videoId: string) {
 		const videoState = await VideoStateRepository.createVideoState({
 			videoId,
 		});
-
 		if (!videoState) {
 			throw new Error('Failed to create video state.');
 		}
@@ -14,7 +12,12 @@ export default class VideoStateService {
 		return videoState;
 	}
 
-	static async updateVideoState(id: string, data: any) {
-		throw new Error('Method not implemented.');
+	static async updateVideoState(videoId: string) {
+		const videoState = await VideoStateRepository.updateVideoState(videoId);
+		if (!videoState) {
+			throw new Error('Failed to update video state.');
+		}
+
+		return videoState;
 	}
 }
