@@ -5,6 +5,7 @@ import S3Service from './s3.service';
 import UploadProgressService from './uploadProgress.service';
 import VideoService, { type CreateVideoRequest } from './video.service';
 import VideoStateService from './videoState.service';
+import KafkaService from './kafka.service';
 
 type InitializeUploadRequest = CreateVideoRequest & { totalParts: number };
 
@@ -98,6 +99,8 @@ export default class UploadService {
 		});
 
 		const videoState = await VideoStateService.updateVideoState(videoId);
+
+		await KafkaService.triggerUploadCompleteEvent(videoId);
 
 		return videoState;
 	}

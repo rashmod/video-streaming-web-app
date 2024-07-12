@@ -22,13 +22,5 @@ export default async function completeUploadController(
 
 	await UploadService.completeUpload({ parts, videoId });
 
-	console.log(`uploaded video: ${++count}`);
-	await kafkaProducer.connect();
-	await kafkaProducer.produce('transcode', {
-		bucket: envConfig.AWS_S3_BUCKET_NAME,
-		videoId,
-	});
-	await kafkaProducer.disconnect();
-
 	res.status(200).json({ success: true, videoId });
 }
