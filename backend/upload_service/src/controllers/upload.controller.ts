@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import asyncFs from 'fs/promises';
 
 import UploadService from '../services/upload.service';
 
@@ -16,9 +15,6 @@ export default async function uploadController(req: Request, res: Response) {
 		videoId,
 		partPath: filePath,
 	});
-
-	await asyncFs.access(filePath);
-	await asyncFs.unlink(filePath);
 
 	res.status(200).json({
 		success: true,

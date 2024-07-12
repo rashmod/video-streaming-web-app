@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs';
+import asyncFs from 'fs/promises';
 
 import S3Service from './s3.service';
 import UploadProgressService from './uploadProgress.service';
@@ -72,6 +73,9 @@ export default class UploadService {
 		});
 
 		await UploadProgressService.incrementUploadProgress(uploadProgress.id);
+
+		await asyncFs.access(partPath);
+		await asyncFs.unlink(partPath);
 
 		return eTag;
 	}
