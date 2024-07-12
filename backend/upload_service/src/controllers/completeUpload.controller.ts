@@ -1,9 +1,8 @@
-import { CompleteMultipartUploadCommand } from '@aws-sdk/client-s3';
 import { Request, Response } from 'express';
 
 import envConfig from '../config/env.config';
-import s3Client from '../config/s3.config';
 import KafkaProducer from '../kafka/Kafka';
+import S3Service from '../services/s3.service';
 
 const kafkaProducer = new KafkaProducer(envConfig.KAFKA_CLIENT_ID);
 
@@ -21,20 +20,15 @@ export default async function completeUploadController(
 		parts: { ETag: string; PartNumber: number }[];
 	} = req.body;
 
-	const command = new CompleteMultipartUploadCommand({
-		Bucket: envConfig.AWS_BUCKET_NAME,
-		Key: videoId,
-		UploadId: uploadId,
-		MultipartUpload: {
-			Parts: parts,
-		},
+	await S3Service.completeMultipartUpload({
+		uploadId,
+		parts,
+		fileKey: videoId,
 	});
-
-	await s3Client.send(command);
 
 	await kafkaProducer.connect();
 	await kafkaProducer.produce('transcode', {
-		bucket: envConfig.AWS_BUCKET_NAME,
+		bucket: envConfig.AWS_S3_BUCKET_NAME,
 		videoId,
 	});
 	await kafkaProducer.disconnect();

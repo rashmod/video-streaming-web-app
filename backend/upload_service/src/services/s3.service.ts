@@ -20,10 +20,10 @@ export default class S3Service {
 		await s3Client.send(command);
 	}
 
-	static async initializeMultipartUpload(videoName: string) {
+	static async initializeMultipartUpload(fileKey: string) {
 		const command = new CreateMultipartUploadCommand({
 			Bucket: envConfig.AWS_S3_BUCKET_NAME,
-			Key: videoName,
+			Key: fileKey,
 		});
 
 		const multipartUpload = await s3Client.send(command);
