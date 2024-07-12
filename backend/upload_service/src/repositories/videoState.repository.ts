@@ -12,7 +12,21 @@ export default class VideoStateRepository {
 	}
 
 	static async getVideoStateById(id: string) {
-		throw new Error('Method not implemented.');
+		const [result] = await db
+			.select()
+			.from(videoState)
+			.where(eq(videoState.id, id));
+
+		return result;
+	}
+
+	static async getVideoStateByVideoId(videoId: string) {
+		const [result] = await db
+			.select()
+			.from(videoState)
+			.where(eq(videoState.videoId, videoId));
+
+		return result;
 	}
 
 	static async updateVideoState(id: string) {

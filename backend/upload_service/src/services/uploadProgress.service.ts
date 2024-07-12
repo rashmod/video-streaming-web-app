@@ -21,6 +21,16 @@ export default class UploadProgressService {
 		return uploadProgress;
 	}
 
+	static async getUploadProgressById(id: string) {
+		const uploadProgress =
+			await UploadProgressRepository.getUploadProgressById(id);
+		if (!uploadProgress) {
+			throw new Error('Upload progress not found.');
+		}
+
+		return uploadProgress;
+	}
+
 	static async getUploadProgressByVideoId(videoId: string) {
 		const uploadProgress =
 			await UploadProgressRepository.getUploadProgressByVideoId(videoId);
@@ -33,23 +43,19 @@ export default class UploadProgressService {
 	}
 
 	static async incrementUploadProgress(id: string) {
-		const uploadProgress =
-			await UploadProgressRepository.incrementUploadProgress(id);
+		await this.getUploadProgressById(id);
 
-		if (!uploadProgress) {
+		const updatedUploadProgress =
+			await UploadProgressRepository.incrementUploadProgress(id);
+		if (!updatedUploadProgress) {
 			throw new Error('Failed to update upload progress.');
 		}
 
-		return uploadProgress;
+		return updatedUploadProgress;
 	}
 
 	static async checkUploadCompleted(videoId: string) {
-		const uploadProgress =
-			await UploadProgressRepository.getUploadProgressByVideoId(videoId);
-
-		if (!uploadProgress) {
-			throw new Error('Upload progress not found.');
-		}
+		const uploadProgress = await this.getUploadProgressByVideoId(videoId);
 
 		const uploadComplete =
 			uploadProgress.uploadedParts === uploadProgress.totalParts;
