@@ -22,8 +22,8 @@ const schema = z
 		AWS_ACCESS_KEY: z.string().trim().min(1),
 		AWS_SECRET_ACCESS_KEY: z.string().trim().min(1),
 
-		AWS_REGION: z.string().trim().min(1),
-		AWS_BUCKET_NAME: z.string().trim().min(1),
+		AWS_S3_REGION: z.string().trim().min(1),
+		AWS_S3_BUCKET_NAME: z.string().trim().min(1),
 
 		KAFKA_CLIENT_ID: z.string().trim().min(1),
 		KAFKA_BROKER: z.string().trim().min(1),
