@@ -1,18 +1,39 @@
 import { Request, Response } from 'express';
 
-import randomName from '../utilities/randomName';
-import S3Service from '../services/s3.service';
+import UploadService from '../services/upload.service';
+
+type InitializeUploadRequest = {
+	title: string;
+	totalParts: number;
+	duration: number;
+	extension: string;
+	userId: string;
+};
 
 export default async function initializeUploadController(
 	req: Request,
 	res: Response
 ) {
-	const { extension }: { extension: string } = req.body;
-	// todo change this to videoName
-	// todo create a video entry in db and get videoId
-	const videoId = randomName() + '.' + extension;
+	if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
 
-	const uploadId = await S3Service.initializeMultipartUpload(videoId);
+	const {
+		title,
+		totalParts,
+		duration,
+		extension,
+		userId,
+	}: InitializeUploadRequest = req.body;
 
-	res.status(200).json({ uploadId, videoId });
+	const thumbnailPath = req.file.path;
+
+	const upload = await UploadService.initializeUpload({
+		thumbnailPath,
+		title,
+		duration,
+		extension,
+		userId,
+		totalParts,
+	});
+
+	res.status(200).json({ success: true, data: upload });
 }
