@@ -1,22 +1,10 @@
-import path from 'path';
-
 import transcodeVideo from '../services/transcodeVideo';
-import uploadAllFilesToS3 from '../services/uploadAllFilesToS3';
 import DownloadService from '../services/download.service';
+import FileService from '../services/file.service';
 
-import deleteFile from '../utilities/deleteFile';
-import generateFilePath from '../utilities/generateFilePath';
 import getVideoResolution from '../utilities/getVideoResolution';
-import getAllFilesPath from '../utilities/getAllFilesPath';
-import generateMasterPlaylist from '../utilities/generateMasterPlaylist';
-import deleteDirectory from '../utilities/deleteDirectory';
 
-import { VARIANTS } from '../constants/constants';
-
-type TranscodeRequest = {
-	bucket: string;
-	videoId: string;
-};
+import { TRANSCODE_DIRECTORY, VARIANTS } from '../constants/constants';
 
 export default async function transcodeProcessor(
 	str: string | undefined,
@@ -25,7 +13,7 @@ export default async function transcodeProcessor(
 	if (!str) return;
 	console.log('transcoding...', str);
 
-	const { bucket, videoId }: TranscodeRequest = JSON.parse(str);
+	const videoId: string = str;
 
 	// videoId is from db
 	// videoName is the filename in s3
@@ -33,33 +21,31 @@ export default async function transcodeProcessor(
 	// todo get videoName from db
 	const videoName = videoId;
 
-	const inputFilePath = generateFilePath({ dir: 'input', videoName });
+	const downloadedFilePath = await FileService.generateDownloadFilePath(
+		videoName
+	);
 
 	await DownloadService.downloadFile({
 		videoName: videoId,
-		destinationPath: inputFilePath,
+		destinationPath: downloadedFilePath,
 	});
 	console.log('downloaded in chunks...');
 
-	const resolution = await getVideoResolution(inputFilePath);
+	const resolution = await getVideoResolution(downloadedFilePath);
 	console.log('Resolution:', resolution);
 
 	const transcodedPromises: Promise<unknown>[] = [];
 
-	const cleanVideoName = videoName.replaceAll('.', '_');
-
-	VARIANTS.forEach((variant) => {
-		const outputFileName = `${cleanVideoName}_${variant.name}.m3u8`;
-		const outputFilePath = generateFilePath({
-			dir: 'output',
-			outputFileName,
-			videoName: cleanVideoName,
-			variant: variant.name,
-		});
+	VARIANTS.forEach(async (variant) => {
+		const { fileName: outputFileName, path: outputFilePath } =
+			await FileService.generateTranscodeFilePath({
+				videoName,
+				variant: variant.name,
+			});
 
 		transcodedPromises.push(
 			transcodeVideo({
-				inputFilePath,
+				inputFilePath: downloadedFilePath,
 				outputFileName,
 				outputFilePath,
 				variant,
@@ -67,18 +53,18 @@ export default async function transcodeProcessor(
 		);
 	});
 
-	generateMasterPlaylist(cleanVideoName);
+	await FileService.generateMasterPlaylist(videoName, VARIANTS);
 
 	await Promise.all(transcodedPromises);
 
-	const baseDir = './output';
-	const videos = getAllFilesPath(baseDir);
+	const videos = await FileService.getFilesPath(TRANSCODE_DIRECTORY);
 
 	await uploadAllFilesToS3(videos);
 
-	const outputDir = path.join(baseDir, cleanVideoName);
-	deleteDirectory(outputDir);
-	deleteFile(inputFilePath);
+	const transcodedVideoDirectory =
+		FileService.getTranscodedVideoDirectory(videoName);
+	await FileService.deleteDirectory(transcodedVideoDirectory);
+	await FileService.deleteFile(downloadedFilePath);
 
 	resumeConsumer();
 }
