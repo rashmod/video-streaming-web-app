@@ -1,9 +1,7 @@
-import transcodeVideo from '../services/transcodeVideo';
+import TranscodeService from '../services/transcode.service';
 import DownloadService from '../services/download.service';
 import S3Service from '../services/s3.service';
 import FileService from '../services/file.service';
-
-import getVideoResolution from '../utilities/getVideoResolution';
 
 import { TRANSCODE_DIRECTORY, VARIANTS } from '../constants/constants';
 
@@ -30,33 +28,12 @@ export default async function transcodeProcessor(
 		videoName: videoId,
 		destinationPath: downloadedFilePath,
 	});
-	console.log('downloaded in chunks...');
 
-	const resolution = await getVideoResolution(downloadedFilePath);
-	console.log('Resolution:', resolution);
-
-	const transcodedPromises: Promise<unknown>[] = [];
-
-	VARIANTS.forEach(async (variant) => {
-		const { fileName: outputFileName, path: outputFilePath } =
-			await FileService.generateTranscodeFilePath({
-				videoName,
-				variant: variant.name,
-			});
-
-		transcodedPromises.push(
-			transcodeVideo({
-				inputFilePath: downloadedFilePath,
-				outputFileName,
-				outputFilePath,
-				variant,
-			})
-		);
+	await TranscodeService.transcodeVariants({
+		videoName,
+		inputFilePath: downloadedFilePath,
+		variants: VARIANTS,
 	});
-
-	await FileService.generateMasterPlaylist(videoName, VARIANTS);
-
-	await Promise.all(transcodedPromises);
 
 	const videos = await FileService.getFilesPath(TRANSCODE_DIRECTORY);
 

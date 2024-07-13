@@ -5,6 +5,7 @@ import {
 	DOWNLOAD_DIRECTORY,
 	TRANSCODE_DIRECTORY,
 } from '../constants/constants';
+import { type Variant } from './transcode.service';
 
 export default class FileService {
 	static async getFilesPath(directoryPath: string) {
@@ -44,13 +45,7 @@ export default class FileService {
 
 	static async generateMasterPlaylist(
 		videoName: string,
-		variants: {
-			width: number;
-			height: number;
-			videoBitrate: string;
-			audioBitrate: string;
-			name: string;
-		}[]
+		variants: Variant[]
 	) {
 		let masterPlaylistContent = '#EXTM3U\n#EXT-X-VERSION:3\n';
 
