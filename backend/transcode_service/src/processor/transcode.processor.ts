@@ -1,8 +1,8 @@
 import path from 'path';
 
-import downloadInChunks from '../services/downloadInChunks';
 import transcodeVideo from '../services/transcodeVideo';
 import uploadAllFilesToS3 from '../services/uploadAllFilesToS3';
+import DownloadService from '../services/download.service';
 
 import deleteFile from '../utilities/deleteFile';
 import generateFilePath from '../utilities/generateFilePath';
@@ -11,7 +11,7 @@ import getAllFilesPath from '../utilities/getAllFilesPath';
 import generateMasterPlaylist from '../utilities/generateMasterPlaylist';
 import deleteDirectory from '../utilities/deleteDirectory';
 
-import VARIANTS from '../constants/constants';
+import { VARIANTS } from '../constants/constants';
 
 type TranscodeRequest = {
 	bucket: string;
@@ -35,7 +35,10 @@ export default async function transcodeProcessor(
 
 	const inputFilePath = generateFilePath({ dir: 'input', videoName });
 
-	await downloadInChunks(bucket, videoId, inputFilePath);
+	await DownloadService.downloadFile({
+		videoName: videoId,
+		destinationPath: inputFilePath,
+	});
 	console.log('downloaded in chunks...');
 
 	const resolution = await getVideoResolution(inputFilePath);

@@ -1,4 +1,4 @@
-const VARIANTS = [
+export const VARIANTS = [
 	{
 		width: 1920,
 		height: 1080,
@@ -36,4 +36,6 @@ const VARIANTS = [
 	},
 ];
 
-export default VARIANTS;
+export const KB = 1024;
+export const MB = 1024 * KB;
+export const CHUNK_SIZE = 5 * MB;
