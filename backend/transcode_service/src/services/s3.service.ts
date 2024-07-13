@@ -1,8 +1,31 @@
-import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { readFileSync } from 'fs';
+import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+
 import s3Client from '../config/s3.config';
 import envConfig from '../config/env.config';
 
+type Video = { path: string; fileKey: string };
+
 export default class S3Service {
+	static async uploadFiles(videos: Video[]) {
+		const uploadVideoPromises = videos.map((video) =>
+			this.uploadFile(video)
+		);
+
+		await Promise.all(uploadVideoPromises);
+	}
+
+	static async uploadFile({ path, fileKey }: Video) {
+		const fileContent = readFileSync(path);
+		const command = new PutObjectCommand({
+			Bucket: envConfig.AWS_BUCKET_NAME,
+			Key: fileKey,
+			Body: fileContent,
+		});
+
+		return s3Client.send(command);
+	}
+
 	static async getObjectInRange({
 		fileKey,
 		start,

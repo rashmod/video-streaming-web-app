@@ -1,5 +1,6 @@
 import transcodeVideo from '../services/transcodeVideo';
 import DownloadService from '../services/download.service';
+import S3Service from '../services/s3.service';
 import FileService from '../services/file.service';
 
 import getVideoResolution from '../utilities/getVideoResolution';
@@ -59,7 +60,7 @@ export default async function transcodeProcessor(
 
 	const videos = await FileService.getFilesPath(TRANSCODE_DIRECTORY);
 
-	await uploadAllFilesToS3(videos);
+	await S3Service.uploadFiles(videos);
 
 	const transcodedVideoDirectory =
 		FileService.getTranscodedVideoDirectory(videoName);
