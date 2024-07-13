@@ -2,7 +2,7 @@ import { uploadProgress, video, videoState } from '../db/schema';
 
 export type NewUploadProgress = Pick<
 	typeof uploadProgress.$inferInsert,
-	'uploadId' | 'videoId' | 'totalParts'
+	'uploadId' | 'videoId' | 'totalParts' | 'uploadKey'
 >;
 
 export type NewVideoState = Pick<typeof videoState.$inferInsert, 'videoId'>;

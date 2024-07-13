@@ -6,12 +6,14 @@ export default class UploadProgressService {
 		totalParts,
 		videoId,
 		uploadId,
+		uploadKey,
 	}: NewUploadProgress) {
 		const uploadProgress =
 			await UploadProgressRepository.createUploadProgress({
 				totalParts,
 				videoId,
 				uploadId,
+				uploadKey,
 			});
 
 		if (!uploadProgress) {

@@ -40,6 +40,7 @@ export default class UploadService {
 			{
 				totalParts,
 				videoId: video.id,
+				uploadKey: video.videoName,
 				uploadId,
 			}
 		);
