@@ -1,7 +1,6 @@
 import { pgEnum, pgTable, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
-import videoState from './videoState.schema';
 import resolution from './resolution.schema';
 import video from './video.schema';
 

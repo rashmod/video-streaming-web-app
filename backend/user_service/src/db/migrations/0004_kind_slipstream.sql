@@ -1,0 +1,1 @@
+ALTER TABLE "upload_progress" ADD COLUMN "upload_key" varchar(255) NOT NULL;
