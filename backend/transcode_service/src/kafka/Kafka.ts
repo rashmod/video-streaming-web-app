@@ -37,10 +37,7 @@ export default class KafkaConsumer {
 	}
 
 	async consume(
-		callback: (
-			message: string | undefined,
-			resumeConsumer: () => void
-		) => void
+		callback: (message: string, resumeConsumer: () => void) => void
 	) {
 		await this.consumer.run({
 			eachMessage: async ({ topic, partition, message }) => {
@@ -48,8 +45,10 @@ export default class KafkaConsumer {
 					`topic:[${topic}] partition:[${partition}] message:[${message.value?.toString()}]`
 				);
 
-				this.pause();
-				callback(message.value?.toString(), () => this.resume());
+				if (message.value) {
+					this.pause();
+					callback(message.value.toString(), () => this.resume());
+				}
 			},
 		});
 	}
