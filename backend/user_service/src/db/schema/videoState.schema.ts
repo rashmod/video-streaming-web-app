@@ -1,8 +1,6 @@
 import { relations } from 'drizzle-orm';
 import { pgEnum, pgTable, timestamp, uuid } from 'drizzle-orm/pg-core';
 
-import uploadProgress from './uploadProgress.schema';
-import transcodingProgress from './transcodingProgress.schema';
 import video from './video.schema';
 
 export const videoStatus = pgEnum('video_status', [
@@ -29,4 +27,5 @@ const videoState = pgTable('video_state', {
 export const videoStateRelations = relations(videoState, ({ one, many }) => ({
 	video: one(video, { fields: [videoState.videoId], references: [video.id] }),
 }));
+
 export default videoState;
