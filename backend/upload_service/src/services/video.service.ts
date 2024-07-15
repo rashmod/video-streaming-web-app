@@ -3,8 +3,8 @@ import { readFileSync } from 'fs';
 
 import S3Service from './s3.service';
 import VideoRepository from '../repositories/video.repository';
-import randomName from '../utilities/randomName';
 import { type NewVideo } from '../types/types';
+import FileService from './file.service';
 
 export type CreateVideoRequest = Omit<
 	NewVideo,
@@ -24,7 +24,7 @@ export default class VideoService {
 	}: CreateVideoRequest) {
 		const thumbnail = readFileSync(thumbnailPath);
 		const thumbnailName = path.basename(thumbnailPath);
-		const videoName = randomName() + '.' + extension;
+		const videoName = FileService.randomName() + '.' + extension;
 
 		const video = await VideoRepository.createVideo({
 			title,
