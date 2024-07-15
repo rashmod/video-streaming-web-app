@@ -18,7 +18,7 @@ export default class S3Service {
 	static async uploadFile({ path, fileKey }: Video) {
 		const fileContent = readFileSync(path);
 		const command = new PutObjectCommand({
-			Bucket: envConfig.AWS_BUCKET_NAME,
+			Bucket: envConfig.AWS_S3_BUCKET_NAME,
 			Key: fileKey,
 			Body: fileContent,
 		});
@@ -36,7 +36,7 @@ export default class S3Service {
 		end: number;
 	}) {
 		const command = new GetObjectCommand({
-			Bucket: envConfig.AWS_BUCKET_NAME,
+			Bucket: envConfig.AWS_S3_BUCKET_NAME,
 			Key: fileKey,
 			Range: `bytes=${start}-${end}`,
 		});
