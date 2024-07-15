@@ -4,20 +4,19 @@ import path from 'path';
 import FileService from '../services/file.service';
 
 const storage = multer.diskStorage({
-	destination: (req, file, cb) => {
-		const { videoId }: { videoId: string } = req.body;
-
-		const uploadDir = './uploads/';
-		if (!fs.existsSync(uploadDir)) {
-			fs.mkdirSync(uploadDir);
+	destination: async (req, file, cb) => {
+		if (req.path === '/initialize') {
+			const thumbnailDir = path.join('./uploads', 'thumbnails');
+			await FileService.ensureDirectoryExists(thumbnailDir);
+			return cb(null, thumbnailDir);
 		}
 
-		const videoDir = path.join(uploadDir, videoId);
-		if (!fs.existsSync(videoDir)) {
-			fs.mkdirSync(videoDir);
+		if (req.path === '/upload') {
+			const { videoId }: { videoId: string } = req.body;
+			const videoDir = path.join('./uploads', 'videos', videoId);
+			await FileService.ensureDirectoryExists(videoDir);
+			return cb(null, videoDir);
 		}
-
-		cb(null, videoDir);
 	},
 
 	filename: (req, file, cb) => {
