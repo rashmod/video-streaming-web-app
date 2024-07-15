@@ -1,4 +1,9 @@
-import { uploadProgress, video, videoState } from '../db/schema';
+import {
+	transcodingProgress,
+	uploadProgress,
+	video,
+	videoState,
+} from '../db/schema';
 
 export type NewUploadProgress = Pick<
 	typeof uploadProgress.$inferInsert,
@@ -10,4 +15,9 @@ export type NewVideoState = Pick<typeof videoState.$inferInsert, 'videoId'>;
 export type NewVideo = Pick<
 	typeof video.$inferInsert,
 	'title' | 'duration' | 'videoName' | 'thumbnailName' | 'userId'
+>;
+
+export type NewTranscodingProgress = Pick<
+	typeof transcodingProgress.$inferInsert,
+	'videoId' | 'resolutionId'
 >;
