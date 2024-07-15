@@ -1,8 +1,7 @@
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs';
 
-import randomName from '../utilities/randomName';
+import FileService from '../services/file.service';
 
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
@@ -22,7 +21,7 @@ const storage = multer.diskStorage({
 	},
 
 	filename: (req, file, cb) => {
-		cb(null, randomName() + path.extname(file.originalname));
+		cb(null, FileService.randomName() + path.extname(file.originalname));
 	},
 });
 const upload = multer({ storage });
