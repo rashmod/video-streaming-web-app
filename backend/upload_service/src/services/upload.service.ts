@@ -1,5 +1,6 @@
-import { readFileSync } from 'fs';
+import fs from 'fs';
 import asyncFs from 'fs/promises';
+import path from 'path';
 
 import S3Service from './s3.service';
 import UploadProgressService from './uploadProgress.service';
@@ -7,6 +8,8 @@ import VideoService, { type CreateVideoRequest } from './video.service';
 import VideoStateService from './videoState.service';
 import KafkaService from './kafka.service';
 import TranscodingProgressService from './transcodingProgress.service';
+
+import { AWS_S3_ORIGINAL_VIDEO_PREFIX } from '../constants/constants';
 
 type InitializeUploadRequest = CreateVideoRequest & { totalParts: number };
 
@@ -36,12 +39,17 @@ export default class UploadService {
 			video.videoName
 		);
 
+		const uploadKey = path.join(
+			AWS_S3_ORIGINAL_VIDEO_PREFIX,
+			path.basename(video.videoName)
+		);
+
 		const videoState = await VideoStateService.createVideoState(video.id);
 		const uploadProgress = await UploadProgressService.createUploadProgress(
 			{
 				totalParts,
 				videoId: video.id,
-				uploadKey: video.videoName,
+				uploadKey,
 				uploadId,
 			}
 		);
@@ -66,7 +74,7 @@ export default class UploadService {
 		const uploadProgress =
 			await UploadProgressService.getUploadProgressByVideoId(videoId);
 
-		const part = readFileSync(partPath);
+		const part = fs.readFileSync(partPath);
 
 		const eTag = await S3Service.uploadPart({
 			fileKey: video.videoName,

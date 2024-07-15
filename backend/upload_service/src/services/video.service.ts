@@ -5,6 +5,10 @@ import S3Service from './s3.service';
 import VideoRepository from '../repositories/video.repository';
 import { type NewVideo } from '../types/types';
 import FileService from './file.service';
+import {
+	AWS_S3_THUMBNAIL_PREFIX,
+	AWS_S3_TRANSCODED_VIDEO_PREFIX,
+} from '../constants/constants';
 
 export type CreateVideoRequest = Omit<
 	NewVideo,
@@ -23,8 +27,14 @@ export default class VideoService {
 		userId,
 	}: CreateVideoRequest) {
 		const thumbnail = readFileSync(thumbnailPath);
-		const thumbnailName = path.basename(thumbnailPath);
-		const videoName = FileService.randomName() + '.' + extension;
+		const thumbnailName = path.join(
+			AWS_S3_THUMBNAIL_PREFIX,
+			path.basename(thumbnailPath)
+		);
+		const videoName = path.join(
+			AWS_S3_TRANSCODED_VIDEO_PREFIX,
+			FileService.randomName() + '.' + extension
+		);
 
 		const video = await VideoRepository.createVideo({
 			title,
