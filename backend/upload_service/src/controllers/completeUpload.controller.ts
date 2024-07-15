@@ -17,10 +17,14 @@ export default async function completeUploadController(
 	const {
 		videoId,
 		parts,
-	}: { videoId: string; parts: { ETag: string; PartNumber: number }[] } =
-		req.body;
+		resolution,
+	}: {
+		videoId: string;
+		parts: { ETag: string; PartNumber: number }[];
+		resolution: { height: number; width: number };
+	} = req.body;
 
-	await UploadService.completeUpload({ parts, videoId });
+	await UploadService.completeUpload({ parts, videoId, resolution });
 
 	res.status(200).json({ success: true, videoId });
 }

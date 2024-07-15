@@ -6,6 +6,7 @@ import UploadProgressService from './uploadProgress.service';
 import VideoService, { type CreateVideoRequest } from './video.service';
 import VideoStateService from './videoState.service';
 import KafkaService from './kafka.service';
+import TranscodingProgressService from './transcodingProgress.service';
 
 type InitializeUploadRequest = CreateVideoRequest & { totalParts: number };
 
@@ -85,9 +86,11 @@ export default class UploadService {
 	static async completeUpload({
 		videoId,
 		parts,
+		resolution,
 	}: {
 		videoId: string;
 		parts: { ETag: string; PartNumber: number }[];
+		resolution: { height: number; width: number };
 	}) {
 		const video = await VideoService.getVideoById(videoId);
 		const uploadCompleted =
@@ -100,6 +103,10 @@ export default class UploadService {
 		});
 
 		const videoState = await VideoStateService.updateVideoState(videoId);
+
+		await TranscodingProgressService.createTranscodingProgressForAllResolutions(
+			{ videoId, originalResolution: resolution }
+		);
 
 		await KafkaService.triggerUploadCompleteEvent(videoId);
 
