@@ -21,19 +21,8 @@ export default class VideoStateService {
 		return videoState;
 	}
 
-	static async getVideoStateByVideoId(videoId: string) {
-		const videoState = await VideoStateRepository.getVideoStateByVideoId(
-			videoId
-		);
-		if (!videoState) {
-			throw new Error('Video state not found.');
-		}
-
-		return videoState;
-	}
-
 	static async updateVideoState(videoId: string) {
-		await this.getVideoStateByVideoId(videoId);
+		await this.getVideoStateById(videoId);
 
 		const updatedVideoState = await VideoStateRepository.updateVideoState(
 			videoId

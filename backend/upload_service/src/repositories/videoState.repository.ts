@@ -15,16 +15,7 @@ export default class VideoStateRepository {
 		const [result] = await db
 			.select()
 			.from(videoState)
-			.where(eq(videoState.id, id));
-
-		return result;
-	}
-
-	static async getVideoStateByVideoId(videoId: string) {
-		const [result] = await db
-			.select()
-			.from(videoState)
-			.where(eq(videoState.videoId, videoId));
+			.where(eq(videoState.videoId, id));
 
 		return result;
 	}
@@ -33,7 +24,7 @@ export default class VideoStateRepository {
 		const [result] = await db
 			.update(videoState)
 			.set({ status: 'TRANSCODING', updatedAt: new Date().toISOString() })
-			.where(eq(videoState.id, id))
+			.where(eq(videoState.videoId, id))
 			.returning();
 
 		return result;

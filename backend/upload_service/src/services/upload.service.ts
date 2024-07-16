@@ -72,7 +72,7 @@ export default class UploadService {
 	}) {
 		const video = await VideoService.getVideoById(videoId);
 		const uploadProgress =
-			await UploadProgressService.getUploadProgressByVideoId(videoId);
+			await UploadProgressService.getUploadProgressById(videoId);
 
 		const part = fs.readFileSync(partPath);
 
@@ -83,7 +83,9 @@ export default class UploadService {
 			partNumber,
 		});
 
-		await UploadProgressService.incrementUploadProgress(uploadProgress.id);
+		await UploadProgressService.incrementUploadProgress(
+			uploadProgress.videoId
+		);
 
 		await asyncFs.access(partPath);
 		await asyncFs.unlink(partPath);

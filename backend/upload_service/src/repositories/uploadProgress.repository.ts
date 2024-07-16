@@ -18,16 +18,7 @@ export default class UploadProgressRepository {
 		const [result] = await db
 			.select()
 			.from(uploadProgress)
-			.where(eq(uploadProgress.id, id));
-
-		return result;
-	}
-
-	static async getUploadProgressByVideoId(videoId: string) {
-		const [result] = await db
-			.select()
-			.from(uploadProgress)
-			.where(eq(uploadProgress.videoId, videoId));
+			.where(eq(uploadProgress.videoId, id));
 
 		return result;
 	}
@@ -39,7 +30,7 @@ export default class UploadProgressRepository {
 				uploadedParts: sql`${uploadProgress.uploadedParts} + 1`,
 				updatedAt: new Date().toISOString(),
 			})
-			.where(eq(uploadProgress.id, id))
+			.where(eq(uploadProgress.videoId, id))
 			.returning();
 
 		return result;

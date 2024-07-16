@@ -33,17 +33,6 @@ export default class UploadProgressService {
 		return uploadProgress;
 	}
 
-	static async getUploadProgressByVideoId(videoId: string) {
-		const uploadProgress =
-			await UploadProgressRepository.getUploadProgressByVideoId(videoId);
-
-		if (!uploadProgress) {
-			throw new Error('Upload progress not found.');
-		}
-
-		return uploadProgress;
-	}
-
 	static async incrementUploadProgress(id: string) {
 		await this.getUploadProgressById(id);
 
@@ -57,7 +46,7 @@ export default class UploadProgressService {
 	}
 
 	static async checkUploadCompleted(videoId: string) {
-		const uploadProgress = await this.getUploadProgressByVideoId(videoId);
+		const uploadProgress = await this.getUploadProgressById(videoId);
 
 		const uploadComplete =
 			uploadProgress.uploadedParts === uploadProgress.totalParts;
