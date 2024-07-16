@@ -10,7 +10,6 @@ export const videoStatus = pgEnum('video_status', [
 ]);
 
 const videoState = pgTable('video_state', {
-	id: uuid('id').defaultRandom().primaryKey(),
 	status: videoStatus('status').notNull().default('UPLOADING'),
 	createdAt: timestamp('created_at', { mode: 'string' })
 		.notNull()
@@ -21,6 +20,7 @@ const videoState = pgTable('video_state', {
 
 	videoId: uuid('video_id')
 		.notNull()
+		.primaryKey()
 		.references(() => video.id),
 });
 

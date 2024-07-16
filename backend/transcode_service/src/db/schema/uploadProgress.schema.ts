@@ -10,7 +10,6 @@ import { relations } from 'drizzle-orm';
 import video from './video.schema';
 
 const uploadProgress = pgTable('upload_progress', {
-	id: uuid('id').defaultRandom().primaryKey(),
 	uploadId: varchar('upload_id', { length: 255 }).notNull(),
 	uploadKey: varchar('upload_key', { length: 255 }).notNull(),
 	totalParts: integer('total_parts').notNull(),
@@ -24,6 +23,7 @@ const uploadProgress = pgTable('upload_progress', {
 
 	videoId: uuid('video_id')
 		.notNull()
+		.primaryKey()
 		.references(() => video.id),
 });
 
