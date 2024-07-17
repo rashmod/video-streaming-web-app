@@ -19,12 +19,12 @@ export default class TranscodeService {
 
 		const transcodedPromises: Promise<unknown>[] = [];
 
-		variants.forEach(async (variant) => {
+		for (const variant of variants) {
 			if (
 				variant.width > resolution.width ||
 				variant.height > resolution.height
 			)
-				return;
+				continue;
 
 			const { fileName: outputFileName, path: outputFilePath } =
 				await FileService.generateTranscodeFilePath({
@@ -40,7 +40,7 @@ export default class TranscodeService {
 					variant,
 				})
 			);
-		});
+		}
 
 		await Promise.all(transcodedPromises);
 		await FileService.generateMasterPlaylist(videoName, variants);
