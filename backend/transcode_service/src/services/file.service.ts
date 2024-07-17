@@ -1,18 +1,24 @@
 import asyncFs from 'fs/promises';
 import path from 'path';
 
+import { type Variant } from './transcode.service';
 import {
+	AWS_S3_TRANSCODED_VIDEO_PREFIX,
 	DOWNLOAD_DIRECTORY,
 	TRANSCODE_DIRECTORY,
 } from '../constants/constants';
-import { type Variant } from './transcode.service';
 
 export default class FileService {
-	static async getFilesPath(directoryPath: string) {
+	static async getFilesPath(base: string, ...directoryPaths: string[]) {
+		const directoryPath = path.join(base, ...directoryPaths);
 		const files = await this.getFilesInDirectory(directoryPath);
 		return files.map((file) => ({
 			path: file,
-			fileKey: path.relative(directoryPath, file),
+			fileKey: this.getS3FileName({
+				fileName: path.relative(base, file),
+				type: 'transcoded',
+				media: 'video',
+			}),
 		}));
 	}
 
@@ -30,17 +36,12 @@ export default class FileService {
 		videoName: string;
 		variant: string;
 	}) {
-		const cleanVideoName = this.getCleanVideoName(videoName);
-		const fileName = `${cleanVideoName}_${variant}.m3u8`;
+		const fileName = `${videoName}_${variant}.m3u8`;
 
-		const fileDir = path.join(TRANSCODE_DIRECTORY, cleanVideoName, variant);
+		const fileDir = path.join(TRANSCODE_DIRECTORY, videoName, variant);
 		await this.ensureDirectoryExists(fileDir);
 
 		return { path: path.join(fileDir, fileName), fileName };
-	}
-
-	static getCleanVideoName(videoName: string) {
-		return videoName.replaceAll('.', '_');
 	}
 
 	static async generateMasterPlaylist(
@@ -71,8 +72,7 @@ export default class FileService {
 	}
 
 	static getTranscodedVideoDirectory(videoName: string) {
-		const cleanVideoName = FileService.getCleanVideoName(videoName);
-		return path.join(TRANSCODE_DIRECTORY, cleanVideoName);
+		return path.join(TRANSCODE_DIRECTORY, videoName);
 	}
 
 	static async deleteFile(filePath: string) {
@@ -81,6 +81,31 @@ export default class FileService {
 
 	static async deleteDirectory(directoryPath: string) {
 		await asyncFs.rm(directoryPath, { recursive: true, force: true });
+	}
+
+	static getS3FileName(data: BaseName | TranscodedName) {
+		const fileName = this.toLinuxPath(data.fileName);
+
+		switch (data.type) {
+			case 'base':
+				return path.basename(fileName);
+
+			case 'transcoded': {
+				const joined = path.join(
+					AWS_S3_TRANSCODED_VIDEO_PREFIX,
+					data.fileName
+				);
+
+				return this.toLinuxPath(joined);
+			}
+
+			default:
+				return undefined as never;
+		}
+	}
+
+	private static toLinuxPath(filePath: string) {
+		return filePath.split(path.sep).join('/');
 	}
 
 	private static async getFilesInDirectory(directoryPath: string) {
@@ -104,6 +129,15 @@ export default class FileService {
 	}
 
 	private static async ensureDirectoryExists(directoryPath: string) {
+		console.log('ensuring directory exists', directoryPath);
 		await asyncFs.mkdir(directoryPath, { recursive: true });
+		console.log('directory exists');
 	}
 }
+
+type BaseName = { fileName: string; type: 'base' };
+type TranscodedName = {
+	fileName: string;
+	type: 'transcoded';
+	media: 'video';
+};
