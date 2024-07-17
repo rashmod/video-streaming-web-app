@@ -27,14 +27,14 @@ export default class KafkaProducer {
 
 	async produce(
 		key: string,
-		data: { bucket: string; videoId: string },
+		videoId: string,
 		partition = 0,
 		topic = 'video'
 	) {
 		console.log('producing message...');
 		await this.producer.send({
 			topic,
-			messages: [{ key, value: JSON.stringify(data), partition }],
+			messages: [{ key, value: videoId, partition }],
 		});
 		console.log('produced message...');
 	}

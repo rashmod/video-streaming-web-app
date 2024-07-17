@@ -20,10 +20,7 @@ export default class KafkaService {
 		const { producer } = KafkaService.getInstance();
 
 		await producer.connect();
-		await producer.produce('transcode', {
-			bucket: envConfig.AWS_S3_BUCKET_NAME,
-			videoId,
-		});
+		await producer.produce('transcode', videoId);
 		await producer.disconnect();
 	}
 }
