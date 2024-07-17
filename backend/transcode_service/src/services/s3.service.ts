@@ -47,8 +47,15 @@ export default class S3Service {
 	}
 
 	static parseRangeAndLength(contentRange: string) {
-		const [range, length] = contentRange.split(' ')[1].split('/');
+		const [_, rangeAndLength] = contentRange.split(' ');
+		if (!rangeAndLength) throw new Error('Range and length not found');
+
+		const [range, length] = rangeAndLength.split('/');
+		if (!range || !length) throw new Error('Range or length not found');
+
 		const [start, end] = range.split('-');
+		if (!start || !end) throw new Error('Start or end not found');
+
 		return {
 			start: parseInt(start),
 			end: parseInt(end),
