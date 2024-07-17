@@ -58,6 +58,7 @@ export default class UploadProgressService {
 		return {
 			uploadComplete,
 			uploadId: uploadProgress.uploadId,
+			uploadKey: uploadProgress.uploadKey,
 		};
 	}
 }

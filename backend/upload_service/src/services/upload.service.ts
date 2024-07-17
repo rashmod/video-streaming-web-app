@@ -70,14 +70,14 @@ export default class UploadService {
 		partNumber: number;
 		videoId: string;
 	}) {
-		const video = await VideoService.getVideoById(videoId);
+		await VideoService.getVideoById(videoId);
 		const uploadProgress =
 			await UploadProgressService.getUploadProgressById(videoId);
 
 		const part = fs.readFileSync(partPath);
 
 		const eTag = await S3Service.uploadPart({
-			fileKey: video.videoName,
+			fileKey: uploadProgress.uploadKey,
 			uploadId: uploadProgress.uploadId,
 			part,
 			partNumber,
@@ -102,13 +102,13 @@ export default class UploadService {
 		parts: { ETag: string; PartNumber: number }[];
 		resolution: { height: number; width: number };
 	}) {
-		const video = await VideoService.getVideoById(videoId);
+		await VideoService.getVideoById(videoId);
 		const uploadCompleted =
 			await UploadProgressService.checkUploadCompleted(videoId);
 
 		await S3Service.completeMultipartUpload({
 			uploadId: uploadCompleted.uploadId,
-			fileKey: video.videoName,
+			fileKey: uploadCompleted.uploadKey,
 			parts,
 		});
 
