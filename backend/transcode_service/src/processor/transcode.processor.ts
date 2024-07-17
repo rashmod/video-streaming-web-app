@@ -50,5 +50,7 @@ export default async function transcodeProcessor(
 	await FileService.deleteDirectory(transcodedVideoDirectory);
 	await FileService.deleteFile(downloadedFilePath);
 
+	await S3Service.deleteFile(uploadKey);
+
 	resumeConsumer();
 }

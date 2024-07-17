@@ -1,5 +1,9 @@
 import { readFileSync } from 'fs';
-import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+	DeleteObjectCommand,
+	GetObjectCommand,
+	PutObjectCommand,
+} from '@aws-sdk/client-s3';
 
 import s3Client from '../config/s3.config';
 import envConfig from '../config/env.config';
@@ -21,6 +25,15 @@ export default class S3Service {
 			Bucket: envConfig.AWS_S3_BUCKET_NAME,
 			Key: fileKey,
 			Body: fileContent,
+		});
+
+		return s3Client.send(command);
+	}
+
+	static async deleteFile(fileKey: string) {
+		const command = new DeleteObjectCommand({
+			Bucket: envConfig.AWS_S3_BUCKET_NAME,
+			Key: fileKey,
 		});
 
 		return s3Client.send(command);
