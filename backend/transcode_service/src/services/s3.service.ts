@@ -42,8 +42,9 @@ export default class S3Service {
 		});
 
 		const { ContentRange, Body } = await s3Client.send(command);
+		const fileContent = await Body?.transformToByteArray();
 
-		return { ContentRange, fileContent: Body?.transformToByteArray() };
+		return { ContentRange, fileContent };
 	}
 
 	static parseRangeAndLength(contentRange: string) {
