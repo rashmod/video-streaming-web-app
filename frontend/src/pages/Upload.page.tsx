@@ -1,10 +1,10 @@
 import { useMutation } from "react-query";
 
-import upload from "../api/upload";
+import upload from "@/api/upload";
 
-import getFileExtension from "../utilities/getFileExtension";
-import chunkFile from "../utilities/chunkFile";
-import createUploadFormData from "../utilities/createUploadFormData";
+import getFileExtension from "@/utilities/getFileExtension";
+import chunkFile from "@/utilities/chunkFile";
+import createFormData from "@/utilities/createFormData";
 
 import { CHUNK_SIZE } from "@/constants/constants";
 import UploadForm, { type Schema } from "@/components/custom/UploadForm";
@@ -38,7 +38,8 @@ export default function Upload() {
     const chunks = chunkFile(video, CHUNK_SIZE);
     const uploadRequest = chunks.map((chunk, i) =>
       uploadVideo(
-        createUploadFormData({
+        createFormData({
+          type: "upload",
           file: chunk,
           partNumber: i + 1,
           uploadId,
