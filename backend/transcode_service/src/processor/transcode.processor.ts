@@ -17,7 +17,15 @@ export default async function transcodeProcessor(
 	const transcodingProgress =
 		await TranscodingProgressService.findAllByVideoId(videoId);
 
-	const variants = transcodingProgress.map((item) => item.resolution);
+	const variants = transcodingProgress.map((item) => ({
+		videoId,
+		resolutionId: item.resolution.id,
+		name: item.resolution.name,
+		height: item.resolution.height,
+		width: item.resolution.width,
+		videoBitrate: item.resolution.videoBitrate,
+		audioBitrate: item.resolution.audioBitrate,
+	}));
 
 	const transcodeKeyBase = FileService.getS3FileName({
 		fileName: transcodeKey,
