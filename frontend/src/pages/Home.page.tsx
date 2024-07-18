@@ -1,37 +1,23 @@
-import Preview from "@/components/custom/Preview";
+import { useQuery } from "react-query";
+
+import videoApi from "@/api/video";
+import VideoList from "@/components/custom/VideoList";
 
 function Home() {
-  function generateViews() {
-    const coinToss = Math.floor(Math.random() * 3);
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["videos"],
+    queryFn: videoApi.getAllVideos,
+  });
 
-    if (coinToss === 0) {
-      return Math.floor(Math.random() * 10_000_000);
-    } else if (coinToss === 1) {
-      return Math.floor(Math.random() * 1_000_000);
-    } else {
-      return Math.floor(Math.random() * 100_000);
-    }
+  if (isError) {
+    return <div>Error</div>;
   }
-  return (
-    <>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {new Array(20).fill(0).map((_, i) => (
-          <Preview
-            key={i}
-            videoId="123"
-            imageUrl="https://picsum.photos/640/360"
-            duration={Math.floor(Math.random() * 10000)}
-            channelAvatarUrl="https://picsum.photos/64/64"
-            title="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laborum, culpa corrupti distinctio enim aspernatur magnam."
-            channelId="123"
-            channelName="Channel Name"
-            views={generateViews()}
-            uploadedAt={new Date()}
-          />
-        ))}
-      </div>
-    </>
-  );
+
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
+
+  return <>{data && <VideoList videos={data} />}</>;
 }
 
 export default Home;
