@@ -2,13 +2,13 @@ import { Clapperboard, Image } from "lucide-react";
 import { DefaultValues, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
 
-import FileUpload from "./FileUpload";
+import FileUpload from "@/components/custom/FileUpload";
 
 import formatFileSize from "@/utilities/formatFileSize";
 import { THUMBNAIL_MAX_FILE_SIZE } from "@/constants/constants";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 
 const schema = z.object({
   title: z.string().trim().min(5, "Title must be at least 5 characters long"),
@@ -17,6 +17,9 @@ const schema = z.object({
     file: z
       .instanceof(File, { message: "Upload video file" })
       .refine((file) => file.type.match("video/*"), "Invalid file type"),
+    height: z.number(),
+    width: z.number(),
+    duration: z.number(),
   }),
   thumbnail: z.object({
     localURL: z.string().trim(),
@@ -37,6 +40,9 @@ const defaultFormValues: DefaultValues<Schema> = {
   video: {
     localURL: "",
     file: undefined,
+    height: undefined,
+    width: undefined,
+    duration: undefined,
   },
   thumbnail: {
     file: undefined,

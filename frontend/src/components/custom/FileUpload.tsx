@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { LucideProps, Trash2 } from "lucide-react";
 import {
   FieldError,
@@ -11,8 +11,8 @@ import {
 
 import { cn } from "@/lib/utils";
 import processFiles from "@/utilities/processFiles";
-import { type FileWithUrl } from "@/types/types";
 import { type Schema } from "@/components/custom/UploadForm";
+import { type FileWithUrl } from "@/types/types";
 
 export default function FileUpload({
   type,
@@ -85,6 +85,18 @@ export default function FileUpload({
     }
   }
 
+  function handleLoadedMetadata(video: React.SyntheticEvent<HTMLVideoElement>) {
+    const videoElement = video.currentTarget;
+    const videoHeight = videoElement.videoHeight;
+    const videoWidth = videoElement.videoWidth;
+    const videoDuration = videoElement.duration;
+
+    setValue("video.height", videoHeight);
+    setValue("video.width", videoWidth);
+    setValue("video.duration", Math.round(videoDuration * 1000));
+    trigger(["video.height", "video.width"]);
+  }
+
   const file = watch(name);
 
   return (
@@ -128,6 +140,7 @@ export default function FileUpload({
           >
             {type === "video" && (
               <video
+                onLoadedMetadata={handleLoadedMetadata}
                 src={file.localURL}
                 className="h-full w-full min-w-32 rounded-md object-cover"
                 controls
