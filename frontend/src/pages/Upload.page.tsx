@@ -24,37 +24,52 @@ export default function Upload() {
 
   async function handleUpload(formData: Schema) {
     const video = formData.video.file;
-    const thumbnail = formData.thumbnail.file;
-    const title = formData.title;
-
-    const extension = getFileExtension(video.name);
-    const initResponse = await initializeUpload({
-      title,
-      thumbnail,
-      extension,
-    });
-    const { uploadId, videoId } = initResponse;
-
     const chunks = chunkFile(video, CHUNK_SIZE);
-    const uploadRequest = chunks.map((chunk, i) =>
-      uploadVideo(
-        createFormData({
-          type: "upload",
-          file: chunk,
-          partNumber: i + 1,
-          uploadId,
-          videoId,
-        }),
-      ),
-    );
+
+    const resolution = {
+      height: formData.video.height,
+      width: formData.video.width,
+    };
+
+    const initializeFormData = createFormData({
+      type: "initialize",
+      userId: "cdbc30d8-ffd3-4042-9126-6c425c1bea53",
+      duration: formData.video.duration,
+      extension: getFileExtension(video.name),
+      thumbnail: formData.thumbnail.file,
+      title: formData.title,
+      totalParts: chunks.length,
+    });
+
+    const initResponse = await initializeUpload(initializeFormData);
+
+    const {
+      video: { id: videoId },
+      uploadProgress: { uploadId },
+    } = initResponse;
+
+    const uploadRequest = chunks.map((chunk, i) => {
+      const uploadFormData = createFormData({
+        type: "upload",
+        file: chunk,
+        partNumber: i + 1,
+        uploadId,
+        videoId,
+      });
+
+      return uploadVideo(uploadFormData);
+    });
 
     const uploadResponse = await Promise.all(uploadRequest);
 
+    console.log(uploadResponse);
+
     await completeUpload({
+      resolution,
       uploadId,
       videoId,
       parts: uploadResponse.map((res, i) => ({
-        ETag: res.eTag,
+        ETag: res,
         PartNumber: i + 1,
       })),
     });
