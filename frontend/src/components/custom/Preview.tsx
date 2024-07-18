@@ -1,4 +1,4 @@
-import { Play } from "lucide-react";
+import { CircleUser, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
@@ -12,12 +12,13 @@ type PreviewProps = {
   imageUrl: string;
   title: string;
   duration: number;
-  channelAvatarUrl: string;
+  channelAvatarUrl: string | null;
   channelName: string;
   channelId: string;
   views: number;
   uploadedAt: Date;
   compact?: boolean;
+  showUser?: boolean;
 };
 
 export default function Preview({
@@ -31,7 +32,9 @@ export default function Preview({
   views,
   uploadedAt,
   compact = false,
+  showUser = true,
 }: PreviewProps) {
+  console.log(videoId, showUser);
   // todo add image placeholder for lazy loading
   return (
     <Link
@@ -48,13 +51,17 @@ export default function Preview({
         </span>
       </div>
       <div className="mt-2 flex gap-2">
-        {!compact && (
-          <Link to={`/channel/${channelId}`} className="">
-            <img
-              src={channelAvatarUrl}
-              alt=""
-              className="w-32 rounded-full object-cover object-center"
-            />
+        {!compact && showUser && (
+          <Link to={`/user/${channelId}`} className="">
+            {channelAvatarUrl ? (
+              <img
+                src={channelAvatarUrl}
+                alt=""
+                className="w-16 rounded-full object-cover object-center"
+              />
+            ) : (
+              <CircleUser className="h-16 w-16" />
+            )}
           </Link>
         )}
         <div className="flex flex-col">
@@ -65,12 +72,14 @@ export default function Preview({
           >
             {title}
           </div>
-          <Link
-            to={`/channel/${channelId}`}
-            className="text-sm font-medium text-indigo-500"
-          >
-            {channelName}
-          </Link>
+          {showUser && (
+            <Link
+              to={`/user/${channelId}`}
+              className="text-sm font-medium text-indigo-500"
+            >
+              {channelName}
+            </Link>
+          )}
           <div className="flex gap-2 text-sm text-gray-500">
             <span>{formatViews(views)} views</span>
             <span>•</span>
