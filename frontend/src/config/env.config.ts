@@ -2,7 +2,8 @@ import { z } from "zod";
 
 const schema = z.object({
   VITE_UPLOAD_SERVICE_API_URL: z.string().trim().min(1),
-  VITE_WATCH_SERVICE_API_URL: z.string().trim().min(1),
+  VITE_USER_SERVICE_API_URL: z.string().trim().min(1),
+  VITE_VIDEO_SERVICE_API_URL: z.string().trim().min(1),
 });
 
 const parsedEnv = schema.safeParse(import.meta.env);
