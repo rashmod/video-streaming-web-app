@@ -1,12 +1,12 @@
 import asyncFs from 'fs/promises';
 import path from 'path';
 
-import { type Variant } from './transcode.service';
 import {
 	AWS_S3_TRANSCODED_VIDEO_PREFIX,
 	DOWNLOAD_DIRECTORY,
 	TRANSCODE_DIRECTORY,
 } from '../constants/constants';
+import { Resolution } from '../types/types';
 
 export default class FileService {
 	static async getFilesPath(base: string, ...directoryPaths: string[]) {
@@ -46,7 +46,7 @@ export default class FileService {
 
 	static async generateMasterPlaylist(
 		videoName: string,
-		variants: Variant[]
+		variants: Resolution[]
 	) {
 		let masterPlaylistContent = '#EXTM3U\n#EXT-X-VERSION:3\n';
 
