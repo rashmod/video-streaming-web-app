@@ -20,5 +20,5 @@ export default async function completeUploadController(
 
 	await UploadService.completeUpload({ parts, videoId, resolution });
 
-	res.status(200).json({ success: true, videoId });
+	res.status(200).json({ success: true, data: videoId });
 }
