@@ -51,6 +51,8 @@ export default class UploadService {
 			}
 		);
 
+		await FileService.deleteFile(thumbnailPath);
+
 		return {
 			video,
 			videoState,
@@ -116,6 +118,12 @@ export default class UploadService {
 		);
 
 		await KafkaService.triggerUploadCompleteEvent(videoId);
+
+		const videoDir = FileService.getMediaDirectory({
+			media: 'video',
+			videoId,
+		});
+		await FileService.deleteDirectory(videoDir);
 
 		return videoState;
 	}

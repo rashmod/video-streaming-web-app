@@ -1,12 +1,6 @@
 import { Request, Response } from 'express';
 
-import envConfig from '../config/env.config';
-import KafkaProducer from '../kafka/Kafka';
 import UploadService from '../services/upload.service';
-
-const kafkaProducer = new KafkaProducer(envConfig.KAFKA_CLIENT_ID);
-
-let count = 0;
 
 export default async function completeUploadController(
 	req: Request,

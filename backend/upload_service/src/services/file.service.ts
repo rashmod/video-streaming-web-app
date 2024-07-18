@@ -67,6 +67,22 @@ export default class FileService {
 		return filePath.split(path.sep).join('/');
 	}
 
+	static async deleteFile(filePath: string) {
+		await asyncFs.unlink(filePath);
+	}
+
+	static async deleteDirectory(directoryPath: string) {
+		await asyncFs.rm(directoryPath, { recursive: true });
+	}
+
+	static getMediaDirectory(data: ThumbnailDir | VideoDir) {
+		if (data.media === 'image') {
+			return path.join('./uploads', 'thumbnails');
+		} else {
+			return path.join('./uploads', 'videos', data.videoId);
+		}
+	}
+
 	private static getTranscodedVideoName(videoName: string) {
 		return videoName.replaceAll('.', '_');
 	}
@@ -87,3 +103,6 @@ type TranscodedName = {
 	type: 'transcoded';
 	media: 'video';
 };
+
+type ThumbnailDir = { media: 'image' };
+type VideoDir = { media: 'video'; videoId: string };
