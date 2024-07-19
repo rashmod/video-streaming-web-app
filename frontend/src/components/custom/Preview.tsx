@@ -1,5 +1,5 @@
 import { CircleUser, Play } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
 import formatDuration from "@/utilities/formatDuration";
@@ -35,11 +35,13 @@ export default function Preview({
   compact = false,
   ...rest
 }: PreviewProps) {
+  const navigate = useNavigate();
+
   const isHomePreview = "channelId" in rest && rest.channelId;
 
   return (
-    <Link
-      to={`/watch?videoId=${videoId}`}
+    <div
+      onClick={() => navigate(`/watch?videoId=${videoId}`)}
       className={cn({ "grid grid-cols-5 gap-x-2": compact })}
     >
       <div className="group relative col-span-2 flex aspect-video w-full overflow-hidden rounded-lg">
@@ -53,7 +55,10 @@ export default function Preview({
       </div>
       <div className="col-span-3 mt-2 flex gap-2">
         {!compact && isHomePreview && (
-          <Link to={`/user/${rest.channelId}`}>
+          <Link
+            onClick={(e) => e.stopPropagation()}
+            to={`/user/${rest.channelId}`}
+          >
             {rest.channelAvatarUrl ? (
               <LazyImage
                 src={rest.channelAvatarUrl}
@@ -75,6 +80,7 @@ export default function Preview({
           </div>
           {isHomePreview && (
             <Link
+              onClick={(e) => e.stopPropagation()}
               to={`/user/${rest.channelId}`}
               className="text-sm font-medium text-indigo-500"
             >
@@ -88,6 +94,6 @@ export default function Preview({
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
