@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import envConfig from "../config/env.config";
-import { VideoWithUser } from "@/types/types";
+import { Video, VideoWithUser } from "@/types/types";
 
 import { generateVideos } from "@/data/videos";
 
@@ -18,6 +18,18 @@ async function getHomeVideos(): Promise<VideoWithUser[]> {
   return generateVideos(20);
 }
 
+async function getUserVideos(userId: string): Promise<Video[]> {
+  // const response = await axios.get(`${VIDEO_SERVICE_API_URL}/videos`);
+  // console.log(response);
+  // return response.data;
+  console.log(userId);
+  await new Promise((resolve) =>
+    setTimeout(resolve, Math.floor(Math.random() * 1000)),
+  );
+
+  return generateVideos(20, false);
+}
+
 async function watchVideo(
   videoId: string,
 ): Promise<{ url: string; token: string; videoName: string }> {
@@ -26,4 +38,4 @@ async function watchVideo(
   return response.data;
 }
 
-export default { watchVideo, getHomeVideos };
+export default { watchVideo, getHomeVideos, getUserVideos };

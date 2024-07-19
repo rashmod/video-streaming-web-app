@@ -10,6 +10,7 @@ import Watch from "./pages/Watch.page";
 import Upload from "./pages/Upload.page";
 import LogIn from "./pages/LogIn.page";
 import Register from "./pages/Register.page";
+import User from "./pages/User.page";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "/upload",
         element: <Upload />,
+      },
+      {
+        path: "/user/:id",
+        element: <User />,
       },
       {
         path: "/log-in",
