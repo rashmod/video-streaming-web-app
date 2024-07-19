@@ -1,8 +1,17 @@
 import { useState } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
-export default function LazyImage({ src, alt }: { src: string; alt?: string }) {
+export default function LazyImage({
+  src,
+  alt,
+  className,
+}: {
+  src: string;
+  alt?: string;
+  className?: string;
+}) {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
@@ -11,9 +20,13 @@ export default function LazyImage({ src, alt }: { src: string; alt?: string }) {
         src={src}
         alt={alt}
         onLoad={() => setIsLoading(false)}
-        className="aspect-video w-full"
+        className={cn("aspect-video w-full", className, {
+          hidden: isLoading,
+        })}
       />
-      {isLoading && <Skeleton className="aspect-video w-full" />}
+      {isLoading && (
+        <Skeleton className={cn("aspect-video w-full", className)} />
+      )}
     </>
   );
 }
