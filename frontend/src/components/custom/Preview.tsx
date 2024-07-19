@@ -36,14 +36,13 @@ export default function Preview({
   ...rest
 }: PreviewProps) {
   const isHomePreview = "channelId" in rest && rest.channelId;
-  console.log(isHomePreview, rest);
-  // todo add image placeholder for lazy loading
+
   return (
     <Link
       to={`/watch?videoId=${videoId}`}
-      className={cn({ "flex gap-x-2": compact })}
+      className={cn({ "grid grid-cols-5 gap-x-2": compact })}
     >
-      <div className="group relative flex aspect-video w-full overflow-hidden rounded-lg">
+      <div className="group relative col-span-2 flex aspect-video w-full overflow-hidden rounded-lg">
         <div className="absolute inset-0 grid place-items-center bg-black/50 text-white opacity-0 group-hover:opacity-100">
           <Play className={cn("h-12 w-12", { "h-6 w-6": compact })} />
         </div>
@@ -52,7 +51,7 @@ export default function Preview({
           {formatDuration(duration)}
         </span>
       </div>
-      <div className="mt-2 flex gap-2">
+      <div className="col-span-3 mt-2 flex gap-2">
         {!compact && isHomePreview && (
           <Link to={`/user/${rest.channelId}`}>
             {rest.channelAvatarUrl ? (
