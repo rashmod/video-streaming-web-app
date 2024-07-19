@@ -27,7 +27,6 @@ export type Video = {
   thumbnailName: string;
   videoName: string;
   createdAt: Date;
-  updatedAt: Date;
   userId: string;
 };
 
@@ -38,3 +37,12 @@ export type VideoState = {
   updatedAt: Date;
   videoId: string;
 };
+
+export type User = {
+  id: string;
+  username: string;
+  avatarUrl: string | null;
+  createdAt: Date;
+};
+
+export type VideoWithUser = Video & { user: User };
