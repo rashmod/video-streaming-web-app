@@ -7,34 +7,36 @@ import formatViews from "@/utilities/formatViews";
 
 import LazyImage from "@/components/custom/LazyImage";
 
-type PreviewProps = {
+type CommonProps = {
   videoId: string;
   imageUrl: string;
   title: string;
   duration: number;
-  channelAvatarUrl: string | null;
-  channelName: string;
-  channelId: string;
   views: number;
   uploadedAt: Date;
   compact?: boolean;
-  showUser?: boolean;
 };
+
+type HomePreviewProps = {
+  channelAvatarUrl: string | null;
+  channelName: string;
+  channelId: string;
+};
+
+type PreviewProps = CommonProps | (CommonProps & HomePreviewProps);
 
 export default function Preview({
   videoId,
   imageUrl,
   title,
   duration,
-  channelAvatarUrl,
-  channelName,
-  channelId,
   views,
   uploadedAt,
   compact = false,
-  showUser = true,
+  ...rest
 }: PreviewProps) {
-  console.log(videoId, showUser);
+  const isHomePreview = "channelId" in rest && rest.channelId;
+  console.log(isHomePreview, rest);
   // todo add image placeholder for lazy loading
   return (
     <Link
@@ -51,13 +53,13 @@ export default function Preview({
         </span>
       </div>
       <div className="mt-2 flex gap-2">
-        {!compact && showUser && (
-          <Link to={`/user/${channelId}`} className="">
-            {channelAvatarUrl ? (
-              <img
-                src={channelAvatarUrl}
+        {!compact && isHomePreview && (
+          <Link to={`/user/${rest.channelId}`}>
+            {rest.channelAvatarUrl ? (
+              <LazyImage
+                src={rest.channelAvatarUrl}
                 alt=""
-                className="w-16 rounded-full object-cover object-center"
+                className="aspect-square w-16 rounded-full object-cover object-center"
               />
             ) : (
               <CircleUser className="h-16 w-16" />
@@ -72,12 +74,12 @@ export default function Preview({
           >
             {title}
           </div>
-          {showUser && (
+          {isHomePreview && (
             <Link
-              to={`/user/${channelId}`}
+              to={`/user/${rest.channelId}`}
               className="text-sm font-medium text-indigo-500"
             >
-              {channelName}
+              {rest.channelName}
             </Link>
           )}
           <div className="flex gap-2 text-sm text-gray-500">
