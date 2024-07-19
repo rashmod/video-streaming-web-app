@@ -3,7 +3,17 @@ import { QueryClient, QueryClientProvider } from "react-query";
 
 import Navbar from "./components/custom/Navbar";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchInterval: false,
+      refetchIntervalInBackground: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function App() {
   return (
