@@ -1,25 +1,25 @@
 import { useMutation } from "react-query";
 
-import upload from "@/api/upload";
+import { uploadApi } from "@/api/";
 
 import getFileExtension from "@/utilities/getFileExtension";
 import chunkFile from "@/utilities/chunkFile";
 import createFormData from "@/utilities/createFormData";
 
-import { CHUNK_SIZE } from "@/constants/constants";
+import { CHUNK_SIZE, USER_ID } from "@/constants/constants";
 import UploadForm, { type Schema } from "@/components/custom/UploadForm";
 
 export default function Upload() {
   const { mutateAsync: initializeUpload } = useMutation({
-    mutationFn: upload.initializeUpload,
+    mutationFn: uploadApi.initializeUpload,
   });
 
   const { mutateAsync: uploadVideo } = useMutation({
-    mutationFn: upload.uploadVideo,
+    mutationFn: uploadApi.uploadVideo,
   });
 
   const { mutateAsync: completeUpload } = useMutation({
-    mutationFn: upload.completeUpload,
+    mutationFn: uploadApi.completeUpload,
   });
 
   async function handleUpload(formData: Schema) {
@@ -33,7 +33,7 @@ export default function Upload() {
 
     const initializeFormData = createFormData({
       type: "initialize",
-      userId: "cdbc30d8-ffd3-4042-9126-6c425c1bea53",
+      userId: USER_ID,
       duration: formData.video.duration,
       extension: getFileExtension(video.name),
       thumbnail: formData.thumbnail.file,

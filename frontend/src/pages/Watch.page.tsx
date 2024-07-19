@@ -1,23 +1,18 @@
 import { useQuery } from "react-query";
 
 import Preview from "@/components/custom/Preview";
-import watch from "../api/watch";
 import Video from "@/components/custom/Video";
 import ChannelInfo from "@/components/custom/ChannelInfo";
 import { Skeleton } from "@/components/ui/skeleton";
+
+import { videoApi } from "@/api";
 
 export default function Watch() {
   const videoId = "123";
 
   const { data, isError, isLoading } = useQuery({
     queryKey: ["video", videoId],
-    queryFn: () => watch.watchVideo(videoId),
-
-    refetchInterval: false,
-    refetchIntervalInBackground: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
+    queryFn: () => videoApi.watchVideo(videoId),
   });
 
   return (

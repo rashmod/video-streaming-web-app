@@ -1,12 +1,12 @@
 import { useQuery } from "react-query";
 
-import videoApi from "@/api/video";
+import { videoApi } from "@/api";
 import VideoList from "@/components/custom/VideoList";
 
 function Home() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["videos"],
-    queryFn: videoApi.getAllVideos,
+    queryFn: videoApi.getHomeVideos,
   });
 
   if (isError) {
