@@ -1,20 +1,18 @@
-import { Video, User } from "@/types/types";
+import { Video, VideoWithStatus, VideoWithUser } from "@/types/types";
 import { faker } from "@faker-js/faker";
 
-type VideoWithUser = Video & { user: User };
-
 export function generateVideos(count: number, user?: true): VideoWithUser[];
-export function generateVideos(count: number, user?: false): Video[];
+export function generateVideos(count: number, user: false): VideoWithStatus[];
 export function generateVideos(
   count: number,
   user?: boolean,
-): Video[] | VideoWithUser[];
+): VideoWithStatus[] | VideoWithUser[];
 
 export function generateVideos(
   count: number,
   user = true,
-): Video[] | VideoWithUser[] {
-  return new Array(count).fill(0).map(() => {
+): VideoWithStatus[] | VideoWithUser[] {
+  const videos = new Array(count).fill(0).map(() => {
     const baseVideo: Video = {
       id: faker.string.uuid(),
       title: faker.lorem.words(),
@@ -38,7 +36,18 @@ export function generateVideos(
 
       return videoWithUser;
     } else {
-      return baseVideo as Video;
+      const videoWithStatus: VideoWithStatus = {
+        ...baseVideo,
+        status: faker.helpers.arrayElement([
+          "UPLOADING",
+          "TRANSCODING",
+          "COMPLETED",
+        ]),
+      };
+
+      return videoWithStatus;
     }
   });
+
+  return videos as VideoWithStatus[] | VideoWithUser[];
 }

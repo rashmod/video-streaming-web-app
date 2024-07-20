@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import envConfig from "../config/env.config";
-import { Video, VideoWithUser } from "@/types/types";
+import { Video, VideoStatus, VideoWithUser } from "@/types/types";
 
 import { generateVideos } from "@/data/videos";
 
@@ -18,7 +18,9 @@ async function getHomeVideos(): Promise<VideoWithUser[]> {
   return generateVideos(20);
 }
 
-async function getUserVideos(userId: string): Promise<Video[]> {
+async function getUserVideos(
+  userId: string,
+): Promise<(Video & { status: VideoStatus })[]> {
   // const response = await axios.get(`${VIDEO_SERVICE_API_URL}/videos`);
   // console.log(response);
   // return response.data;

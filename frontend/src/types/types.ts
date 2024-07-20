@@ -30,9 +30,11 @@ export type Video = {
   userId: string;
 };
 
+export type VideoStatus = "UPLOADING" | "TRANSCODING" | "COMPLETED";
+
 export type VideoState = {
   id: string;
-  status: string;
+  status: VideoStatus;
   createdAt: Date;
   updatedAt: Date;
   videoId: string;
@@ -45,4 +47,5 @@ export type User = {
   createdAt: Date;
 };
 
+export type VideoWithStatus = Video & { status: VideoStatus };
 export type VideoWithUser = Video & { user: User };
