@@ -5,9 +5,9 @@ import UserService from '../services/user.service';
 export default class UserController {
 	static async registerUser(req: Request, res: Response) {
 		const {
-			name = 'john doe',
-			email = 'example@exe.com',
-			password = '12345678',
+			name,
+			email,
+			password,
 		}: { name: string; email: string; password: string } = req.body;
 
 		const user = await UserService.createUser({ name, email, password });

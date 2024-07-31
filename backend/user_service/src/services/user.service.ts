@@ -1,5 +1,11 @@
 import UserRepository from '../repositories/user.repository';
 import { NewUser } from '../types/user.types';
+import {
+	ConflictError,
+	InternalServerError,
+	NotFoundError,
+	UnauthorizedError,
+} from '../errors';
 
 export default class UserService {
 	static async createUser(data: NewUser) {
@@ -7,12 +13,12 @@ export default class UserService {
 
 		const existingUser = await UserRepository.getUserByEmail(email);
 		if (existingUser) {
-			throw new Error('User already exists');
+			throw new ConflictError('User already exists');
 		}
 
 		const user = await UserRepository.createUser(data);
 		if (!user) {
-			throw new Error('Failed to create user');
+			throw new InternalServerError('Failed to create user');
 		}
 
 		return user;
@@ -21,7 +27,7 @@ export default class UserService {
 	static async getUserById(id: string) {
 		const user = await UserRepository.getUserById(id);
 		if (!user) {
-			throw new Error('User not found');
+			throw new NotFoundError('User not found');
 		}
 
 		return user;
@@ -30,12 +36,12 @@ export default class UserService {
 	static async updateUser(id: string, data: Pick<NewUser, 'name'>) {
 		const user = await UserRepository.getUserById(id);
 		if (!user) {
-			throw new Error('User not found');
+			throw new NotFoundError('User not found');
 		}
 
 		const updatedUser = await UserRepository.updateUser(id, data);
 		if (!updatedUser) {
-			throw new Error('Failed to update user');
+			throw new InternalServerError('Failed to update user');
 		}
 
 		return updatedUser;
@@ -44,12 +50,12 @@ export default class UserService {
 	static async deleteUser(id: string) {
 		const user = await UserRepository.getUserById(id);
 		if (!user) {
-			throw new Error('User not found');
+			throw new NotFoundError('User not found');
 		}
 
 		const deletedUser = await UserRepository.deleteUser(id);
 		if (!deletedUser) {
-			throw new Error('Failed to delete user');
+			throw new InternalServerError('Failed to delete user');
 		}
 
 		return deletedUser;
