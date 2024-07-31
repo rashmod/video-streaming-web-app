@@ -39,4 +39,33 @@ export default class UserController {
 
 		res.status(200).json({ success: true, data: user });
 	}
+
+	static async loginUser(req: Request, res: Response) {
+		const { email, password }: { email: string; password: string } =
+			req.body;
+
+		const { user, accessToken, refreshToken } = await UserService.loginUser(
+			email,
+			password
+		);
+
+		res.cookie('refreshToken', refreshToken, {
+			httpOnly: true,
+			secure: true,
+			path: '/refresh_token',
+			maxAge: 7 * 24 * 60 * 60 * 1000,
+		});
+
+		res.status(200).json({ success: true, data: { user, accessToken } });
+	}
+
+	static logoutUser(_req: Request, res: Response) {
+		res.cookie('refreshToken', '', {
+			httpOnly: true,
+			secure: true,
+			path: '/refresh_token',
+			maxAge: 0,
+		});
+		res.status(200).json({ success: true, data: null });
+	}
 }

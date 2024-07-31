@@ -1,5 +1,6 @@
 import UserRepository from '../repositories/user.repository';
 import { NewUser } from '../types/user.types';
+import AuthService from './auth.service';
 import {
 	ConflictError,
 	InternalServerError,
@@ -16,12 +17,20 @@ export default class UserService {
 			throw new ConflictError('User already exists');
 		}
 
-		const user = await UserRepository.createUser(data);
+		const hashedPassword = AuthService.hashPassword(data.password);
+
+		const user = await UserRepository.createUser({
+			...data,
+			password: hashedPassword,
+		});
 		if (!user) {
 			throw new InternalServerError('Failed to create user');
 		}
 
-		return user;
+		const accessToken = AuthService.signToken({ id: user.id }, 'access');
+		const refreshToken = AuthService.signToken({ id: user.id }, 'refresh');
+
+		return { user, accessToken, refreshToken };
 	}
 
 	static async getUserById(id: string) {
@@ -59,5 +68,25 @@ export default class UserService {
 		}
 
 		return deletedUser;
+	}
+
+	static async loginUser(email: string, password: string) {
+		const user = await UserRepository.getUserByEmail(email);
+		if (!user) {
+			throw new NotFoundError('User not found');
+		}
+
+		const isPasswordValid = AuthService.comparePassword(
+			password,
+			user.password
+		);
+		if (!isPasswordValid) {
+			throw new UnauthorizedError('Invalid password');
+		}
+
+		const accessToken = AuthService.signToken({ id: user.id }, 'access');
+		const refreshToken = AuthService.signToken({ id: user.id }, 'refresh');
+
+		return { user, accessToken, refreshToken };
 	}
 }

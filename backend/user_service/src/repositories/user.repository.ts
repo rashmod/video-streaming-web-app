@@ -38,6 +38,7 @@ export default class UserRepository {
 				id: user.id,
 				name: user.name,
 				email: user.email,
+				password: user.password,
 				avatarUrl: user.avatarUrl,
 				createdAt: user.createdAt,
 				updatedAt: user.updatedAt,

@@ -10,7 +10,7 @@ export default class AuthService {
 		return bcrypt.compareSync(password, hash);
 	}
 
-	static signToken(payload: string, tokenType: 'access' | 'refresh') {
+	static signToken(payload: { id: string }, tokenType: 'access' | 'refresh') {
 		if (tokenType === 'refresh') {
 			return sign(payload, 'refresh secret', { expiresIn: '7d' });
 		} else {
