@@ -27,6 +27,8 @@ const schema = z
 
 		KAFKA_CLIENT_ID: z.string().trim().min(1),
 		KAFKA_BROKER: z.string().trim().min(1),
+
+		JWT_ACCESS_TOKEN_SECRET: z.string().trim().min(1),
 	})
 	.refine(
 		(data) =>
