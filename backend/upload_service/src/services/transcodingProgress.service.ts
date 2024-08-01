@@ -1,3 +1,4 @@
+import { InternalServerError } from '../errors';
 import ResolutionRepository from '../repositories/resolution.repository';
 import TranscodingProgressRepository from '../repositories/transcodingProgress.repository';
 import { NewTranscodingProgress } from '../types/types';
@@ -37,7 +38,9 @@ export default class TranscodingProgressService {
 			await TranscodingProgressRepository.createTranscodingProgress(data);
 
 		if (!transcodingProgress) {
-			throw new Error('Failed to create transcoding progress');
+			throw new InternalServerError(
+				'Failed to create transcoding progress'
+			);
 		}
 
 		return transcodingProgress;

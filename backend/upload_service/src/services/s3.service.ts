@@ -7,6 +7,7 @@ import {
 
 import envConfig from '../config/env.config';
 import s3Client from '../config/s3.config';
+import { InternalServerError } from '../errors';
 
 export default class S3Service {
 	static async uploadImage(file: Buffer, fileKey: string) {
@@ -29,7 +30,9 @@ export default class S3Service {
 		const multipartUpload = await s3Client.send(command);
 
 		if (!multipartUpload.UploadId) {
-			throw new Error('Failed to initialize multipart upload.');
+			throw new InternalServerError(
+				'Failed to initialize multipart upload.'
+			);
 		}
 
 		return multipartUpload.UploadId;
@@ -57,7 +60,7 @@ export default class S3Service {
 		const result = await s3Client.send(command);
 
 		if (!result.ETag) {
-			throw new Error('Failed to upload part.');
+			throw new InternalServerError('Failed to upload part.');
 		}
 
 		return result.ETag;

@@ -4,6 +4,7 @@ import S3Service from './s3.service';
 import FileService from './file.service';
 import VideoRepository from '../repositories/video.repository';
 import { type NewVideo } from '../types/types';
+import { InternalServerError, NotFoundError } from '../errors';
 
 export type CreateVideoRequest = Omit<
 	NewVideo,
@@ -42,7 +43,7 @@ export default class VideoService {
 		});
 
 		if (!video) {
-			throw new Error('Failed to create video.');
+			throw new InternalServerError('Failed to create video.');
 		}
 
 		await S3Service.uploadImage(thumbnail, thumbnailName);
@@ -53,7 +54,7 @@ export default class VideoService {
 	static async getVideoById(id: string) {
 		const video = await VideoRepository.getVideoById(id);
 		if (!video) {
-			throw new Error('Video not found.');
+			throw new NotFoundError('Video not found.');
 		}
 
 		return video;

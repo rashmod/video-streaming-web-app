@@ -1,3 +1,4 @@
+import { BadRequestError, InternalServerError, NotFoundError } from '../errors';
 import UploadProgressRepository from '../repositories/uploadProgress.repository';
 import { type NewUploadProgress } from '../types/types';
 
@@ -17,7 +18,7 @@ export default class UploadProgressService {
 			});
 
 		if (!uploadProgress) {
-			throw new Error('Failed to create upload progress.');
+			throw new InternalServerError('Failed to create upload progress.');
 		}
 
 		return uploadProgress;
@@ -27,7 +28,7 @@ export default class UploadProgressService {
 		const uploadProgress =
 			await UploadProgressRepository.getUploadProgressById(id);
 		if (!uploadProgress) {
-			throw new Error('Upload progress not found.');
+			throw new NotFoundError('Upload progress not found.');
 		}
 
 		return uploadProgress;
@@ -39,7 +40,7 @@ export default class UploadProgressService {
 		const updatedUploadProgress =
 			await UploadProgressRepository.incrementUploadProgress(id);
 		if (!updatedUploadProgress) {
-			throw new Error('Failed to update upload progress.');
+			throw new InternalServerError('Failed to update upload progress.');
 		}
 
 		return updatedUploadProgress;
@@ -52,7 +53,7 @@ export default class UploadProgressService {
 			uploadProgress.uploadedParts === uploadProgress.totalParts;
 
 		if (!uploadComplete) {
-			throw new Error('Upload not completed.');
+			throw new BadRequestError('Upload not complete.');
 		}
 
 		return {

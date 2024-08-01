@@ -1,3 +1,4 @@
+import { InternalServerError, NotFoundError } from '../errors';
 import VideoStateRepository from '../repositories/videoState.repository';
 
 export default class VideoStateService {
@@ -6,7 +7,7 @@ export default class VideoStateService {
 			videoId,
 		});
 		if (!videoState) {
-			throw new Error('Failed to create video state.');
+			throw new InternalServerError('Failed to create video state.');
 		}
 
 		return videoState;
@@ -15,7 +16,7 @@ export default class VideoStateService {
 	static async getVideoStateById(id: string) {
 		const videoState = await VideoStateRepository.getVideoStateById(id);
 		if (!videoState) {
-			throw new Error('Video state not found.');
+			throw new NotFoundError('Video state not found.');
 		}
 
 		return videoState;
@@ -28,7 +29,7 @@ export default class VideoStateService {
 			videoId
 		);
 		if (!updatedVideoState) {
-			throw new Error('Failed to update video state.');
+			throw new InternalServerError('Failed to update video state.');
 		}
 
 		return updatedVideoState;
