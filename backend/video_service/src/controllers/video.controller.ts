@@ -1,14 +1,32 @@
 import { Request, Response } from 'express';
 
 import VideoService from '../services/video.service';
+import ServiceResponse from '../http/ServiceResponse';
+import handleServiceResponse from '../http/handleServiceResponse';
 
 export default class VideoController {
+	static async findMany(req: Request, res: Response) {
+		const videos = await VideoService.findMany();
+
+		const response = ServiceResponse.success({
+			data: videos,
+			message: 'Videos fetched successfully',
+			statusCode: 200,
+		});
+		handleServiceResponse(res, response);
+	}
+
 	static async getVideo(req: Request<{ id: string }>, res: Response) {
 		const { id }: { id: string } = req.params;
 
 		const video = await VideoService.getVideoById(id);
 
-		res.status(200).json({ success: true, data: video });
+		const response = ServiceResponse.success({
+			data: video,
+			message: 'Video fetched successfully',
+			statusCode: 200,
+		});
+		handleServiceResponse(res, response);
 	}
 
 	static async updateVideo(req: Request<{ id: string }>, res: Response) {
@@ -23,7 +41,12 @@ export default class VideoController {
 			thumbnailName,
 		});
 
-		res.status(200).json({ success: true, data: video });
+		const response = ServiceResponse.success({
+			data: video,
+			message: 'Video updated successfully',
+			statusCode: 200,
+		});
+		handleServiceResponse(res, response);
 	}
 
 	static async deleteVideo(req: Request<{ id: string }>, res: Response) {
@@ -31,6 +54,11 @@ export default class VideoController {
 
 		const video = await VideoService.deleteVideo(id);
 
-		res.status(200).json({ success: true, data: video });
+		const response = ServiceResponse.success({
+			data: video,
+			message: 'Video deleted successfully',
+			statusCode: 200,
+		});
+		handleServiceResponse(res, response);
 	}
 }
