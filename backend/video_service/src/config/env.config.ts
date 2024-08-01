@@ -26,6 +26,8 @@ const schema = z
 		AWS_CLOUDFRONT_URL: z.string().trim().min(1),
 		AWS_CLOUDFRONT_KEY_PAIR_ID: z.string().trim().min(1),
 		AWS_CLOUDFRONT_PRIVATE_KEY: z.string().trim().min(1),
+
+		JWT_ACCESS_TOKEN_SECRET: z.string().trim().min(1),
 	})
 	.refine(
 		(data) =>
