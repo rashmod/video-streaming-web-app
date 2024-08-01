@@ -1,10 +1,29 @@
 import { eq } from 'drizzle-orm';
 
 import db from '../db';
-import { video } from '../db/schema';
+import { user, video } from '../db/schema';
 import { type NewVideo } from '../types/video.types';
 
 export default class VideoRepository {
+	static async findMany() {
+		const result = await db
+			.select({
+				id: video.id,
+				title: video.title,
+				duration: video.duration,
+				thumbnailName: video.thumbnailName,
+				videoName: video.videoName,
+				createdAt: video.createdAt,
+				userId: video.userId,
+				username: user.name,
+				avatarUrl: user.avatarUrl,
+			})
+			.from(video)
+			.innerJoin(user, eq(video.userId, user.id));
+
+		return result;
+	}
+
 	static async getVideoById(id: string) {
 		const [result] = await db
 			.select({
