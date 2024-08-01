@@ -3,7 +3,7 @@ import cors from 'cors';
 
 import envConfig from './config/env.config';
 import userRoutes from './routes/user.route';
-import errorHandler from './middlewares/errorHandler';
+import errorHandler from './middlewares/errorHandler.middleware';
 
 const app = express();
 

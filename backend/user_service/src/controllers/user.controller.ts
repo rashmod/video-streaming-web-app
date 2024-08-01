@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 
 import UserService from '../services/user.service';
+import ServiceResponse from '../http/ServiceResponse';
+import handleServiceResponse from '../http/handleServiceResponse';
 
 export default class UserController {
 	static async registerUser(req: Request, res: Response) {
@@ -12,7 +14,12 @@ export default class UserController {
 
 		const user = await UserService.createUser({ name, email, password });
 
-		res.status(200).json({ success: true, data: user });
+		const response = ServiceResponse.success({
+			data: user,
+			message: 'User created successfully',
+			statusCode: 200,
+		});
+		handleServiceResponse(res, response);
 	}
 
 	static async getUser(req: Request<{ id: string }>, res: Response) {
@@ -20,7 +27,12 @@ export default class UserController {
 
 		const user = await UserService.getUserById(id);
 
-		res.status(200).json({ success: true, data: user });
+		const response = ServiceResponse.success({
+			data: user,
+			message: 'User fetched successfully',
+			statusCode: 200,
+		});
+		handleServiceResponse(res, response);
 	}
 
 	static async updateUser(req: Request<{ id: string }>, res: Response) {
@@ -29,7 +41,12 @@ export default class UserController {
 
 		const user = await UserService.updateUser(id, { name });
 
-		res.status(200).json({ success: true, data: user });
+		const response = ServiceResponse.success({
+			data: user,
+			message: 'User updated successfully',
+			statusCode: 200,
+		});
+		handleServiceResponse(res, response);
 	}
 
 	static async deleteUser(req: Request<{ id: string }>, res: Response) {
@@ -37,7 +54,12 @@ export default class UserController {
 
 		const user = await UserService.deleteUser(id);
 
-		res.status(200).json({ success: true, data: user });
+		const response = ServiceResponse.success({
+			data: user,
+			message: 'User deleted successfully',
+			statusCode: 200,
+		});
+		handleServiceResponse(res, response);
 	}
 
 	static async loginUser(req: Request, res: Response) {
@@ -56,7 +78,12 @@ export default class UserController {
 			maxAge: 7 * 24 * 60 * 60 * 1000,
 		});
 
-		res.status(200).json({ success: true, data: { user, accessToken } });
+		const response = ServiceResponse.success({
+			data: { user, accessToken },
+			message: 'User logged in successfully',
+			statusCode: 200,
+		});
+		handleServiceResponse(res, response);
 	}
 
 	static logoutUser(_req: Request, res: Response) {
@@ -66,6 +93,12 @@ export default class UserController {
 			path: '/refresh_token',
 			maxAge: 0,
 		});
-		res.status(200).json({ success: true, data: null });
+
+		const response = ServiceResponse.success({
+			data: null,
+			message: 'User logged out successfully',
+			statusCode: 200,
+		});
+		handleServiceResponse(res, response);
 	}
 }
