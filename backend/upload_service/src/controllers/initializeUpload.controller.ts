@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 
 import UploadService from '../services/upload.service';
+import { BadRequestError } from '../errors';
+import ServiceResponse from '../http/ServiceResponse';
+import handleServiceResponse from '../http/handleServiceResponse';
 
 type InitializeUploadRequest = {
 	title: string;
@@ -14,7 +17,7 @@ export default async function initializeUploadController(
 	req: Request,
 	res: Response
 ) {
-	if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+	if (!req.file) throw new BadRequestError('No file uploaded');
 
 	const {
 		title,
@@ -23,6 +26,8 @@ export default async function initializeUploadController(
 		extension,
 		userId,
 	}: InitializeUploadRequest = req.body;
+
+	console.log('initializing upload...');
 
 	const thumbnailPath = req.file.path;
 
@@ -35,5 +40,10 @@ export default async function initializeUploadController(
 		totalParts,
 	});
 
-	res.status(200).json({ success: true, data: upload });
+	const response = ServiceResponse.success({
+		data: upload,
+		message: 'Successfully initialized upload',
+		statusCode: 200,
+	});
+	handleServiceResponse(res, response);
 }

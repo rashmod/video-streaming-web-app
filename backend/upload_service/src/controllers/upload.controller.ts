@@ -1,12 +1,17 @@
 import { Request, Response } from 'express';
 
 import UploadService from '../services/upload.service';
+import { BadRequestError } from '../errors';
+import ServiceResponse from '../http/ServiceResponse';
+import handleServiceResponse from '../http/handleServiceResponse';
 
 export default async function uploadController(req: Request, res: Response) {
-	if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+	if (!req.file) throw new BadRequestError('No file uploaded');
 
 	const { videoId, partNumber }: { videoId: string; partNumber: number } =
 		req.body;
+
+	console.log('uploading...', partNumber);
 
 	const filePath = req.file.path;
 
@@ -16,8 +21,10 @@ export default async function uploadController(req: Request, res: Response) {
 		partPath: filePath,
 	});
 
-	res.status(200).json({
-		success: true,
+	const response = ServiceResponse.success({
 		data: eTag,
+		message: 'Successfully uploaded video part',
+		statusCode: 200,
 	});
+	handleServiceResponse(res, response);
 }

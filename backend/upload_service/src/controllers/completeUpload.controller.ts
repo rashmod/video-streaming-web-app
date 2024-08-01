@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 
 import UploadService from '../services/upload.service';
+import handleServiceResponse from '../http/handleServiceResponse';
+import ServiceResponse from '../http/ServiceResponse';
 
 export default async function completeUploadController(
 	req: Request,
@@ -20,5 +22,10 @@ export default async function completeUploadController(
 
 	await UploadService.completeUpload({ parts, videoId, resolution });
 
-	res.status(200).json({ success: true, data: videoId });
+	const response = ServiceResponse.success({
+		data: videoId,
+		message: 'Successfully uploaded video',
+		statusCode: 200,
+	});
+	handleServiceResponse(res, response);
 }

@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/', uploadRoutes);
+app.use('/api/upload', uploadRoutes);
 
 app.listen(envConfig.PORT, () => {
 	console.log(
