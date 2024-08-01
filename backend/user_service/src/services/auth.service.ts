@@ -1,6 +1,8 @@
 import bcrypt from 'bcryptjs';
 import { sign, verify } from 'jsonwebtoken';
 
+import envConfig from '../config/env.config';
+
 export default class AuthService {
 	static hashPassword(password: string) {
 		return bcrypt.hashSync(password, 10);
@@ -12,9 +14,13 @@ export default class AuthService {
 
 	static signToken(payload: { id: string }, tokenType: 'access' | 'refresh') {
 		if (tokenType === 'refresh') {
-			return sign(payload, 'refresh secret', { expiresIn: '7d' });
+			return sign(payload, envConfig.JWT_REFRESH_TOKEN_SECRET, {
+				expiresIn: envConfig.JWT_REFRESH_TOKEN_EXPIRY,
+			});
 		} else {
-			return sign(payload, 'access secret', { expiresIn: '15m' });
+			return sign(payload, envConfig.JWT_ACCESS_TOKEN_SECRET, {
+				expiresIn: envConfig.JWT_ACCESS_TOKEN_EXPIRY,
+			});
 		}
 	}
 
@@ -24,9 +30,9 @@ export default class AuthService {
 	) {
 		if (!token) return false;
 		if (tokenType === 'refresh') {
-			return verify(token, 'refresh secret');
+			return verify(token, envConfig.JWT_REFRESH_TOKEN_SECRET);
 		} else {
-			return verify(token, 'access secret');
+			return verify(token, envConfig.JWT_ACCESS_TOKEN_SECRET);
 		}
 	}
 }

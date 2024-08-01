@@ -20,6 +20,11 @@ const schema = z
 		POSTGRES_USER: z.string().trim().min(1),
 		POSTGRES_PASSWORD: z.string().trim().min(1),
 		POSTGRES_DB: z.string().trim().min(1),
+
+		JWT_ACCESS_TOKEN_SECRET: z.string().trim().min(1),
+		JWT_ACCESS_TOKEN_EXPIRY: z.string().trim().min(1),
+		JWT_REFRESH_TOKEN_SECRET: z.string().trim().min(1),
+		JWT_REFRESH_TOKEN_EXPIRY: z.string().trim().min(1),
 	})
 	.refine(
 		(data) =>
