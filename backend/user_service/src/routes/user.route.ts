@@ -6,6 +6,7 @@ import authMiddleware from '../middlewares/auth.middleware';
 
 const router = express.Router();
 
+router.route('/refresh_token').post(catchAsync(UserController.refreshToken));
 router.route('/register').post(catchAsync(UserController.registerUser));
 router.route('/login').post(catchAsync(UserController.loginUser));
 router.route('/logout').post(UserController.logoutUser);

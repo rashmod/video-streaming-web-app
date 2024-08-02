@@ -101,4 +101,25 @@ export default class UserController {
 		});
 		handleServiceResponse(res, response);
 	}
+
+	static async refreshToken(req: Request, res: Response) {
+		const { refreshToken: token }: { refreshToken: string } = req.cookies;
+		const { accessToken, refreshToken } = await UserService.refreshToken(
+			token
+		);
+
+		res.cookie('refreshToken', refreshToken, {
+			httpOnly: true,
+			secure: true,
+			path: '/refresh_token',
+			maxAge: 7 * 24 * 60 * 60 * 1000,
+		});
+
+		const response = ServiceResponse.success({
+			data: accessToken,
+			message: 'Token refreshed successfully',
+			statusCode: 200,
+		});
+		handleServiceResponse(res, response);
+	}
 }

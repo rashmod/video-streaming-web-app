@@ -89,4 +89,16 @@ export default class UserService {
 
 		return { user, accessToken, refreshToken };
 	}
+
+	static async refreshToken(token: string) {
+		const { id } = AuthService.verifyToken(token, 'refresh') as {
+			id: string;
+		};
+
+		await UserService.getUserById(id);
+
+		const { accessToken, refreshToken } = AuthService.signTokens({ id });
+
+		return { accessToken, refreshToken };
+	}
 }

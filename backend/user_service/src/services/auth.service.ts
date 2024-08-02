@@ -24,6 +24,13 @@ export default class AuthService {
 		}
 	}
 
+	static signTokens(payload: { id: string }) {
+		return {
+			accessToken: AuthService.signToken(payload, 'access'),
+			refreshToken: AuthService.signToken(payload, 'refresh'),
+		};
+	}
+
 	static verifyToken(
 		token: string | undefined,
 		tokenType: 'access' | 'refresh'
