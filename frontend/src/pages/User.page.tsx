@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { CircleUser } from "lucide-react";
 
 import { USER_ID } from "@/constants/constants";

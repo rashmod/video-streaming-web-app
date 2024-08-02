@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import Video from "@/components/custom/Video";
 import ChannelInfo from "@/components/custom/ChannelInfo";
