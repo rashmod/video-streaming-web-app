@@ -49,3 +49,28 @@ export type User = {
 
 export type VideoWithStatus = Video & { status: VideoStatus };
 export type VideoWithUser = Video & { user: User };
+
+export type Auth = { data: string } | undefined;
+
+export type ServiceResponse<T> = SuccessResponse<T> | ErrorResponse<T>;
+
+export type SuccessResponse<T> = {
+  success: true;
+  message: string;
+  data: T;
+  statusCode: number;
+  errors: null;
+};
+
+export type ErrorResponse<T> = {
+  success: false;
+  message: string;
+  data: null;
+  statusCode: number;
+  errors: T;
+};
+
+export type LoginResponse = {
+  user: User;
+  accessToken: string;
+};
