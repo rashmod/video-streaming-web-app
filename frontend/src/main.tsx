@@ -11,36 +11,20 @@ import Upload from "./pages/Upload.page";
 import LogIn from "./pages/LogIn.page";
 import Register from "./pages/Register.page";
 import User from "./pages/User.page";
+import Profile from "./pages/Profile.page";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
-      {
-        path: "/watch",
-        element: <Watch />,
-      },
-      {
-        path: "/upload",
-        element: <Upload />,
-      },
-      {
-        path: "/user/:id",
-        element: <User />,
-      },
-      {
-        path: "/log-in",
-        element: <LogIn />,
-      },
-      {
-        path: "/register",
-        element: <Register />,
-      },
+      { path: "/", element: <Home /> },
+      { path: "/watch", element: <Watch /> },
+      { path: "/upload", element: <Upload /> },
+      { path: "/user/:id", element: <User /> },
+      { path: "/profile", element: <Profile /> },
+      { path: "/log-in", element: <LogIn /> },
+      { path: "/register", element: <Register /> },
     ],
   },
 ]);
