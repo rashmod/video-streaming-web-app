@@ -1,15 +1,28 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { CloudUpload, HomeIcon, LogIn, MonitorPause } from "lucide-react";
+import {
+  CloudUpload,
+  HomeIcon,
+  LogIn,
+  LogOut,
+  MonitorPause,
+  SquareUser,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import SearchBox from "@/components/custom/SearchBox";
 import BottomNavigationLink from "@/components/custom/BottomNavigationLink";
+import useAuthContext from "@/context/auth/useAuthContext";
+import LoggedIn from "./auth/LoggedIn";
+import LoggedOut from "./auth/LoggedOut";
 
 export default function Navbar({ children }: { children: React.ReactNode }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const {
+    logout: { action: logout },
+  } = useAuthContext();
 
   return (
     <>
@@ -35,45 +48,49 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
               Home
             </Button>
           </Link>
-          {/* <Link to='#'>
-						<Button size='sm' variant='ghost'>
-							Profile
-						</Button>
-					</Link> */}
+          <Link to="/profile">
+            <Button size="sm" variant="ghost">
+              Profile
+            </Button>
+          </Link>
           <Link to="/upload">
             <Button size="sm" variant="ghost">
               Upload
             </Button>
           </Link>
-          {/* <Link to='#'>
-						<Button size='sm' variant='ghost'>
-							Log Out
-						</Button>
-					</Link> */}
-          <Link to="/register">
-            <Button size="sm" variant="outline" className="border-2">
-              Register
-            </Button>
-          </Link>
-          <Link to="/log-in">
-            <Button size="sm" variant="default">
-              Log In
-            </Button>
-          </Link>
+          <LoggedIn>
+            <Link to="#">
+              <Button size="sm" variant="ghost" onClick={() => logout()}>
+                Log Out
+              </Button>
+            </Link>
+          </LoggedIn>
+          <LoggedOut>
+            <Link to="/register">
+              <Button size="sm" variant="outline" className="border-2">
+                Register
+              </Button>
+            </Link>
+            <Link to="/log-in">
+              <Button size="sm" variant="default">
+                Log In
+              </Button>
+            </Link>
+          </LoggedOut>
         </nav>
       </header>
       <section className="grow">{children}</section>
       <div className="invisible mt-0 lg:mt-5" />
       <header className="shadow-t sticky bottom-0 left-0 z-10 mt-5 flex w-full items-center justify-around bg-white py-3 dark:bg-gray-950 lg:hidden">
         <BottomNavigationLink to="/" title="Home" Icon={HomeIcon} />
-        {/* <BottomNavigationLink
-					to='#'
-					title='Profile'
-					Icon={SquareUser}
-				/> */}
+        <BottomNavigationLink to="/profile" title="Profile" Icon={SquareUser} />
         <BottomNavigationLink to="/upload" title="Upload" Icon={CloudUpload} />
-        {/* <BottomNavigationLink to='#' title='Log Out' Icon={LogOut} /> */}
-        <BottomNavigationLink to="/log-in" title="Log In" Icon={LogIn} />
+        <LoggedIn>
+          <BottomNavigationLink to="#" title="Log Out" Icon={LogOut} />
+        </LoggedIn>
+        <LoggedOut>
+          <BottomNavigationLink to="/log-in" title="Log In" Icon={LogIn} />
+        </LoggedOut>
       </header>
     </>
   );
