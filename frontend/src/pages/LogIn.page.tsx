@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/custom/PasswordInput";
+import useAuthContext from "@/context/auth/useAuthContext";
 
 const schema = z.object({
   email: z.string().email(),
@@ -36,12 +38,31 @@ export default function LogIn() {
     resolver: zodResolver(schema),
   });
 
+  const {
+    login: { action: login, data, error, isLoading, isError },
+  } = useAuthContext();
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (data) {
+      navigate("/");
+    }
+  }, [navigate, data]);
 
   const onSubmit: SubmitHandler<LogInSchema> = (data) => {
     console.log(data);
-    navigate("/");
+    login({ email: data.email, password: data.password });
   };
+
+  if (isLoading) return <p>Loading...</p>;
+  if (isError)
+    return (
+      <div>
+        <p>{JSON.stringify(error, null, 2)}</p>
+        <p>Error</p>
+      </div>
+    );
 
   return (
     <Card className="mx-auto max-w-sm">
