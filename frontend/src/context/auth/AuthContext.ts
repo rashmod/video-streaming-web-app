@@ -1,17 +1,22 @@
 import { createContext } from "react";
-import { UseMutateFunction } from "react-query";
+import { UseMutateFunction } from "@tanstack/react-query";
 
-type MutationContext<T> = {
-  action: UseMutateFunction<T>;
+import { LoginResponse, SuccessResponse } from "@/types/types";
+import { LoginRequest, RegisterRequest } from "@/api/auth.api";
+
+type MutationContext<T, U> = {
+  action: UseMutateFunction<T, Error, U, unknown>;
   data: T | undefined;
   isLoading: boolean;
   isError: boolean;
+  error: Error | null;
 };
 
 type AuthContext = {
-  register: MutationContext<{ data: string }>;
-  login: MutationContext<{ data: string }>;
-  logout: Omit<MutationContext<{ data: string }>, "data">;
+  register: MutationContext<SuccessResponse<LoginResponse>, RegisterRequest>;
+  login: MutationContext<SuccessResponse<LoginResponse>, LoginRequest>;
+  logout: MutationContext<SuccessResponse<null>, void>;
+  isLoggedIn: boolean;
 };
 
 const AuthContext = createContext<AuthContext | null>(null);
