@@ -34,7 +34,13 @@ async function login(
 }
 
 async function logout(): Promise<SuccessResponse<null>> {
-  const response = await axios.get(`${USER_SERVICE_API_URL}/logout`);
+  const response = await axios.post(
+    `${USER_SERVICE_API_URL}/logout`,
+    {},
+    {
+      withCredentials: true,
+    },
+  );
   console.log(response);
   return response.data;
 }
