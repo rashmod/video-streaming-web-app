@@ -12,11 +12,16 @@ import LogIn from "./pages/LogIn.page";
 import Register from "./pages/Register.page";
 import User from "./pages/User.page";
 import Profile from "./pages/Profile.page";
+import GlobalProvider from "./providers/GlobalProvider";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: (
+      <GlobalProvider>
+        <App />
+      </GlobalProvider>
+    ),
     children: [
       { path: "/", element: <Home /> },
       { path: "/watch", element: <Watch /> },
