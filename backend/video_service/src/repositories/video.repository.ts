@@ -33,6 +33,7 @@ export default class VideoRepository {
 				thumbnailName: video.thumbnailName,
 				videoName: video.videoName,
 				createdAt: video.createdAt,
+				userId: video.userId,
 			})
 			.from(video)
 			.where(eq(video.id, id));

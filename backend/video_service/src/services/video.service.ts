@@ -2,6 +2,7 @@ import VideoRepository from '../repositories/video.repository';
 import MediaService from './media.service';
 import { type NewVideo } from '../types/video.types';
 import { InternalServerError, NotFoundError } from '../errors';
+import UserService from './user.service';
 
 export default class VideoService {
 	static async findMany() {
@@ -37,12 +38,22 @@ export default class VideoService {
 			throw new NotFoundError('Video not found');
 		}
 
-		const thumbnailUrl = MediaService.getThumbnailSignedUrl(
+		const user = await UserService.findById(video.userId);
+
+		const avatarUrl = await (async () => {
+			if (!user.avatarUrl) return null;
+			return await MediaService.getThumbnailSignedUrl(user.avatarUrl);
+		})();
+
+		const thumbnailUrl = await MediaService.getThumbnailSignedUrl(
 			video.thumbnailName
 		);
-		const videoUrl = MediaService.getVideoSignedUrl(video.videoName);
+		const videoUrl = await MediaService.getVideoSignedUrl(video.videoName);
 
-		return { ...video, thumbnailUrl, videoUrl };
+		return {
+			video: { ...video, thumbnailUrl, videoUrl },
+			user: { ...user, avatarUrl },
+		};
 	}
 
 	static async updateVideo(
