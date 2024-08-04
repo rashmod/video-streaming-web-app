@@ -1,7 +1,7 @@
-import axios from "axios";
-
+import axios from "@/utilities/axios";
 import envConfig from "@/config/env.config";
 import { LoginResponse, SuccessResponse } from "@/types/types";
+
 const USER_SERVICE_API_URL = envConfig.VITE_USER_SERVICE_API_URL;
 
 export type RegisterRequest = {

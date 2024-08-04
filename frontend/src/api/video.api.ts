@@ -1,5 +1,4 @@
-import axios from "axios";
-
+import axios from "@/utilities/axios";
 import envConfig from "../config/env.config";
 import { Video, VideoStatus, VideoWithUser } from "@/types/types";
 
