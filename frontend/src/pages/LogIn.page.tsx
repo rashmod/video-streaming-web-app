@@ -39,16 +39,17 @@ export default function LogIn() {
   });
 
   const {
-    login: { action: login, data, error, isLoading, isError },
+    login: { action: login, error, isLoading, isError },
+    token: { isLoggedIn },
   } = useAuthContext();
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (data) {
+    if (isLoggedIn) {
       navigate("/");
     }
-  }, [navigate, data]);
+  }, [navigate, isLoggedIn]);
 
   const onSubmit: SubmitHandler<LogInSchema> = (data) => {
     console.log(data);

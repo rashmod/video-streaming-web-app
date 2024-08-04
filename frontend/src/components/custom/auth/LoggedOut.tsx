@@ -1,7 +1,9 @@
 import useAuthContext from "@/context/auth/useAuthContext";
 
 export default function LoggedOut({ children }: { children: React.ReactNode }) {
-  const { isLoggedIn } = useAuthContext();
+  const {
+    token: { isLoggedIn },
+  } = useAuthContext();
 
   if (!isLoggedIn) return children;
 }
