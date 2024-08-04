@@ -18,7 +18,7 @@ export default class MediaService {
 		});
 
 		const url = await getSignedUrlS3(s3Client, command, {
-			expiresIn: WEEK,
+			expiresIn: WEEK / 1000,
 		});
 
 		return url;

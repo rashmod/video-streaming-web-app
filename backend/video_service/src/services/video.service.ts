@@ -10,7 +10,25 @@ export default class VideoService {
 			throw new InternalServerError('Failed to fetch videos');
 		}
 
-		return videos;
+		const videosWithUrls = Promise.all(
+			videos.map(async (video) => {
+				// todo show thumbnail through cloudfront
+				const thumbnailUrl = await MediaService.getThumbnailSignedUrl(
+					video.thumbnailName
+				);
+
+				const avatarUrl = await (async () => {
+					if (!video.avatarUrl) return null;
+					return await MediaService.getThumbnailSignedUrl(
+						video.avatarUrl
+					);
+				})();
+
+				return { ...video, thumbnailUrl, avatarUrl };
+			})
+		);
+
+		return videosWithUrls;
 	}
 
 	static async getVideoById(id: string) {

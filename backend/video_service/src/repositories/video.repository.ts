@@ -15,7 +15,7 @@ export default class VideoRepository {
 				videoName: video.videoName,
 				createdAt: video.createdAt,
 				userId: video.userId,
-				username: user.name,
+				name: user.name,
 				avatarUrl: user.avatarUrl,
 			})
 			.from(video)
