@@ -86,7 +86,12 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
         <BottomNavigationLink to="/profile" title="Profile" Icon={SquareUser} />
         <BottomNavigationLink to="/upload" title="Upload" Icon={CloudUpload} />
         <LoggedIn>
-          <BottomNavigationLink to="#" title="Log Out" Icon={LogOut} />
+          <BottomNavigationLink
+            to="#"
+            title="Log Out"
+            Icon={LogOut}
+            onClick={() => logout()}
+          />
         </LoggedIn>
         <LoggedOut>
           <BottomNavigationLink to="/log-in" title="Log In" Icon={LogIn} />
