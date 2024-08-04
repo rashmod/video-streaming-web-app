@@ -15,8 +15,8 @@ export type UploadProgress = {
   uploadKey: string;
   totalParts: number;
   uploadedParts: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   videoId: string;
 };
 
@@ -26,7 +26,7 @@ export type Video = {
   duration: number;
   thumbnailName: string;
   videoName: string;
-  createdAt: Date;
+  createdAt: string;
   userId: string;
 };
 
@@ -35,8 +35,8 @@ export type VideoStatus = "UPLOADING" | "TRANSCODING" | "COMPLETED";
 export type VideoState = {
   id: string;
   status: VideoStatus;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   videoId: string;
 };
 
@@ -44,7 +44,7 @@ export type User = {
   id: string;
   username: string;
   avatarUrl: string | null;
-  createdAt: Date;
+  createdAt: string;
 };
 
 export type VideoWithStatus = Video & { status: VideoStatus };
@@ -73,4 +73,17 @@ export type ErrorResponse<T> = {
 export type LoginResponse = {
   user: User;
   accessToken: string;
+};
+
+export type HomeVideo = {
+  thumbnailUrl: string;
+  id: string;
+  title: string;
+  duration: number;
+  thumbnailName: string;
+  videoName: string;
+  createdAt: string;
+  userId: string;
+  name: string;
+  avatarUrl: string | null;
 };

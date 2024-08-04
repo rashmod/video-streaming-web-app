@@ -17,7 +17,7 @@ function Home() {
     return <div>Loading</div>;
   }
 
-  return <>{data && <VideoList videos={data} />}</>;
+  return <>{data && <VideoList videos={data.data} />}</>;
 }
 
 export default Home;

@@ -13,7 +13,7 @@ type CommonProps = {
   title: string;
   duration: number;
   views: number;
-  uploadedAt: Date;
+  uploadedAt: string;
   compact?: boolean;
 };
 
@@ -50,7 +50,7 @@ export default function Preview({
         </div>
         <LazyImage src={imageUrl} alt={title} />
         <span className="absolute bottom-3 right-3 rounded-md bg-gray-900/70 px-2 py-1 text-sm font-medium text-white">
-          {formatDuration(duration)}
+          {formatDuration(duration / 1000)}
         </span>
       </div>
       <div className="col-span-3 mt-2 flex gap-2">
@@ -90,7 +90,7 @@ export default function Preview({
           <div className="flex gap-2 text-sm text-gray-500">
             <span>{formatViews(views)} views</span>
             <span>•</span>
-            <span>{uploadedAt.toLocaleDateString()}</span>
+            <span>{new Date(uploadedAt).toDateString()}</span>
           </div>
         </div>
       </div>

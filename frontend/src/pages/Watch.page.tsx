@@ -70,7 +70,7 @@ export default function Watch() {
           {isLoadingVideos && <div>Loading videos...</div>}
           {isErrorVideos && <div>Something went wrong</div>}
           {!isLoadingVideos && !isErrorVideos && videos && (
-            <VideoList videos={videos} compact />
+            <VideoList videos={videos.data} compact />
           )}
         </div>
       </div>
