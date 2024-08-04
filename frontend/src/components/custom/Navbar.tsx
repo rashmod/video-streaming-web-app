@@ -48,17 +48,17 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
               Home
             </Button>
           </Link>
-          <Link to="/profile">
-            <Button size="sm" variant="ghost">
-              Profile
-            </Button>
-          </Link>
-          <Link to="/upload">
-            <Button size="sm" variant="ghost">
-              Upload
-            </Button>
-          </Link>
           <LoggedIn>
+            <Link to="/profile">
+              <Button size="sm" variant="ghost">
+                Profile
+              </Button>
+            </Link>
+            <Link to="/upload">
+              <Button size="sm" variant="ghost">
+                Upload
+              </Button>
+            </Link>
             <Link to="#">
               <Button size="sm" variant="ghost" onClick={() => logout()}>
                 Log Out
@@ -83,9 +83,17 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
       <div className="invisible mt-0 lg:mt-5" />
       <header className="shadow-t sticky bottom-0 left-0 z-10 mt-5 flex w-full items-center justify-around bg-white py-3 dark:bg-gray-950 lg:hidden">
         <BottomNavigationLink to="/" title="Home" Icon={HomeIcon} />
-        <BottomNavigationLink to="/profile" title="Profile" Icon={SquareUser} />
-        <BottomNavigationLink to="/upload" title="Upload" Icon={CloudUpload} />
         <LoggedIn>
+          <BottomNavigationLink
+            to="/profile"
+            title="Profile"
+            Icon={SquareUser}
+          />
+          <BottomNavigationLink
+            to="/upload"
+            title="Upload"
+            Icon={CloudUpload}
+          />
           <BottomNavigationLink
             to="#"
             title="Log Out"
