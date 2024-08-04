@@ -13,6 +13,7 @@ import Register from "./pages/Register.page";
 import User from "./pages/User.page";
 import Profile from "./pages/Profile.page";
 import GlobalProvider from "./providers/GlobalProvider";
+import ProtectedRoute from "./components/custom/auth/ProtectedRoutes";
 
 const router = createBrowserRouter([
   {
@@ -27,7 +28,14 @@ const router = createBrowserRouter([
       { path: "/watch", element: <Watch /> },
       { path: "/upload", element: <Upload /> },
       { path: "/user/:id", element: <User /> },
-      { path: "/profile", element: <Profile /> },
+      {
+        path: "/profile",
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
+      },
       { path: "/log-in", element: <LogIn /> },
       { path: "/register", element: <Register /> },
     ],
