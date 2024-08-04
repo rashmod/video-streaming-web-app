@@ -1,9 +1,10 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { authApi } from "@/api";
+import React from "react";
 
-export default function useLogin() {
-  const queryClient = useQueryClient();
-
+export default function useLogin(
+  setAccessToken: React.Dispatch<React.SetStateAction<string | undefined>>,
+) {
   const {
     mutate,
     data,
@@ -13,7 +14,7 @@ export default function useLogin() {
   } = useMutation({
     mutationFn: authApi.login,
     onSuccess: ({ data }) => {
-      queryClient.setQueryData(["auth"], data.accessToken);
+      setAccessToken(data.accessToken);
     },
   });
 

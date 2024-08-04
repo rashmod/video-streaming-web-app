@@ -1,22 +1,27 @@
 import { authApi } from "@/api";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import React from "react";
 
-export default function useRefreshToken() {
-  const queryClient = useQueryClient();
-
+export default function useRefreshToken(
+  setAccessToken: React.Dispatch<React.SetStateAction<string | undefined>>,
+) {
   const {
     mutate,
+    data,
     isPending: isLoading,
     isError,
+    status,
   } = useMutation({
     mutationFn: authApi.refreshToken,
     onSuccess: ({ data }) => {
-      queryClient.setQueryData(["auth"], data);
+      setAccessToken(data);
     },
     onError: () => {
-      queryClient.removeQueries({ queryKey: ["auth"] });
+      console.log("refresh token error");
+      setAccessToken(undefined);
     },
   });
 
-  return { action: mutate, isLoading, isError };
+  console.log({ status });
+  return { action: mutate, data, isLoading, isError };
 }

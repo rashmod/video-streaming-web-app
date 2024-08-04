@@ -1,52 +1,58 @@
-import { useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-
 import AuthContext from "./AuthContext";
 
 import useRegister from "@/hooks/useRegister";
 import useLogin from "@/hooks/useLogin";
 import useLogout from "@/hooks/useLogout";
 import useRefreshToken from "@/hooks/useRefreshToken";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function AuthContextProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [accessToken, setAccessToken] = useState<string>();
+  const [refreshingToken, setRefreshingToken] = useState(true);
+
   const {
     action: register,
     data: registerData,
     error: registerError,
     isLoading: isRegisterLoading,
     isError: isRegisterError,
-  } = useRegister();
+  } = useRegister(setAccessToken);
   const {
     action: login,
     data: loginData,
     error: loginError,
     isLoading: isLoginLoading,
     isError: isLoginError,
-  } = useLogin();
+  } = useLogin(setAccessToken);
   const {
     action: logout,
     data: logoutData,
     error: logoutError,
     isLoading: isLogoutLoading,
     isError: isLogoutError,
-  } = useLogout();
-  const { action: refreshToken } = useRefreshToken();
+  } = useLogout(setAccessToken);
+  const {
+    action: refreshToken,
+    data: refreshTokenData,
+    isLoading: isRefreshTokenLoading,
+  } = useRefreshToken(setAccessToken);
 
   useEffect(() => {
     refreshToken();
+    setRefreshingToken(false);
   }, [refreshToken]);
 
-  const queryClient = useQueryClient();
-  const authStatus = queryClient.getQueryData<string>(["auth"]);
+  useEffect(() => {
+    if (refreshTokenData) {
+      setAccessToken(refreshTokenData.data);
+    }
+  }, [refreshTokenData]);
 
-  console.log({ authStatus });
-
-  axios.defaults.headers.common.Authorization = `Bearer ${authStatus}`;
+  console.log({ accessToken });
 
   return (
     <AuthContext.Provider
@@ -72,7 +78,11 @@ export default function AuthContextProvider({
           isLoading: isLogoutLoading,
           isError: isLogoutError,
         },
-        isLoggedIn: !!authStatus,
+        token: {
+          isLoggedIn: Boolean(accessToken),
+          setAccessToken,
+          isLoading: isRefreshTokenLoading || refreshingToken,
+        },
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import React, { createContext } from "react";
 import { UseMutateFunction } from "@tanstack/react-query";
 
 import { LoginResponse, SuccessResponse } from "@/types/types";
@@ -16,7 +16,11 @@ type AuthContext = {
   register: MutationContext<SuccessResponse<LoginResponse>, RegisterRequest>;
   login: MutationContext<SuccessResponse<LoginResponse>, LoginRequest>;
   logout: MutationContext<SuccessResponse<null>, void>;
-  isLoggedIn: boolean;
+  token: {
+    isLoggedIn: boolean;
+    isLoading: boolean;
+    setAccessToken: React.Dispatch<React.SetStateAction<string | undefined>>;
+  };
 };
 
 const AuthContext = createContext<AuthContext | null>(null);
