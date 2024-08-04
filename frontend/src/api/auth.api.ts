@@ -5,7 +5,7 @@ import { LoginResponse, SuccessResponse } from "@/types/types";
 const USER_SERVICE_API_URL = envConfig.VITE_USER_SERVICE_API_URL;
 
 export type RegisterRequest = {
-  username: string;
+  name: string;
   email: string;
   password: string;
 };

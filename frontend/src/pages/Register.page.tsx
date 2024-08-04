@@ -22,10 +22,12 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/custom/PasswordInput";
+import useAuthContext from "@/context/auth/useAuthContext";
+import { useEffect } from "react";
 
 const schema = z
   .object({
-    username: z.string().min(3).max(30),
+    name: z.string().min(3).max(30),
     email: z.string().email(),
     password: z.string().min(8).max(30),
     confirmPassword: z.string(),
@@ -40,7 +42,7 @@ type RegisterSchema = z.infer<typeof schema>;
 export default function Register() {
   const form = useForm<RegisterSchema>({
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -48,12 +50,36 @@ export default function Register() {
     resolver: zodResolver(schema),
   });
 
+  const {
+    register: { action: register, error, isLoading, isError },
+    token: { isLoggedIn },
+  } = useAuthContext();
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [navigate, isLoggedIn]);
 
   const onSubmit: SubmitHandler<RegisterSchema> = (data) => {
     console.log(data);
-    navigate("/");
+    register({
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    });
   };
+
+  if (isLoading) return <p>Loading...</p>;
+  if (isError)
+    return (
+      <div>
+        <p>{JSON.stringify(error, null, 2)}</p>
+        <p>Error</p>
+      </div>
+    );
 
   return (
     <Card className="mx-auto max-w-sm">
@@ -69,7 +95,7 @@ export default function Register() {
           <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
-              name="username"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Username</FormLabel>
