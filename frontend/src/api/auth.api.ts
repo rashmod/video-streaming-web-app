@@ -13,7 +13,9 @@ export type RegisterRequest = {
 async function register(
   data: RegisterRequest,
 ): Promise<SuccessResponse<LoginResponse>> {
-  const response = await axios.post(`${USER_SERVICE_API_URL}/register`, data);
+  const response = await axios.post(`${USER_SERVICE_API_URL}/register`, data, {
+    withCredentials: true,
+  });
   console.log(response);
   return response.data;
 }
@@ -34,13 +36,9 @@ async function login(
 }
 
 async function logout(): Promise<SuccessResponse<null>> {
-  const response = await axios.post(
-    `${USER_SERVICE_API_URL}/logout`,
-    {},
-    {
-      withCredentials: true,
-    },
-  );
+  const response = await axios.post(`${USER_SERVICE_API_URL}/logout`, null, {
+    withCredentials: true,
+  });
   console.log(response);
   return response.data;
 }
