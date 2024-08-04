@@ -13,14 +13,13 @@ export default class VideoService {
 
 		const videosWithUrls = Promise.all(
 			videos.map(async (video) => {
-				// todo show thumbnail through cloudfront
-				const thumbnailUrl = await MediaService.getThumbnailSignedUrl(
+				const thumbnailUrl = await MediaService.getImageSignedUrl(
 					video.thumbnailName
 				);
 
 				const avatarUrl = await (async () => {
 					if (!video.avatarUrl) return null;
-					return await MediaService.getThumbnailSignedUrl(
+					return await MediaService.getImageSignedUrl(
 						video.avatarUrl
 					);
 				})();
@@ -42,10 +41,10 @@ export default class VideoService {
 
 		const avatarUrl = await (async () => {
 			if (!user.avatarUrl) return null;
-			return await MediaService.getThumbnailSignedUrl(user.avatarUrl);
+			return await MediaService.getImageSignedUrl(user.avatarUrl);
 		})();
 
-		const thumbnailUrl = await MediaService.getThumbnailSignedUrl(
+		const thumbnailUrl = await MediaService.getImageSignedUrl(
 			video.thumbnailName
 		);
 		const videoUrl = await MediaService.getVideoSignedUrl(video.videoName);
@@ -70,7 +69,7 @@ export default class VideoService {
 			throw new InternalServerError('Failed to update video');
 		}
 
-		const thumbnailUrl = MediaService.getThumbnailSignedUrl(
+		const thumbnailUrl = MediaService.getImageSignedUrl(
 			video.thumbnailName
 		);
 		const videoUrl = MediaService.getVideoSignedUrl(video.videoName);

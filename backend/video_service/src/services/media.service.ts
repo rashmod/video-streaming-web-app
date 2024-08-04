@@ -11,17 +11,31 @@ export default class MediaService {
 		throw new Error('Method not implemented.');
 	}
 
-	static async getThumbnailSignedUrl(fileKey: string) {
-		const command = new GetObjectCommand({
-			Bucket: envConfig.AWS_S3_BUCKET_NAME,
-			Key: fileKey,
+	static async getImageSignedUrl(fileKey: string) {
+		const policy = {
+			Statement: [
+				{
+					Resource: `${envConfig.AWS_CLOUDFRONT_URL}/${fileKey}`,
+					Condition: {
+						DateLessThan: {
+							'AWS:EpochTime': Math.floor(
+								(new Date().getTime() + WEEK) / 1000
+							),
+						},
+					},
+				},
+			],
+		};
+
+		const customPolicy = JSON.stringify(policy);
+
+		const signedUrl = getSignedUrlCloudFront({
+			policy: customPolicy,
+			keyPairId: envConfig.AWS_CLOUDFRONT_KEY_PAIR_ID,
+			privateKey: envConfig.AWS_CLOUDFRONT_PRIVATE_KEY,
 		});
 
-		const url = await getSignedUrlS3(s3Client, command, {
-			expiresIn: WEEK / 1000,
-		});
-
-		return url;
+		return signedUrl;
 	}
 
 	static async getVideoSignedUrl(fileKey: string) {
