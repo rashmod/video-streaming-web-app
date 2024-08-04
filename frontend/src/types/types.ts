@@ -87,3 +87,17 @@ export type HomeVideo = {
   name: string;
   avatarUrl: string | null;
 };
+
+export type WatchVideo = {
+  video: Omit<HomeVideo, "avatarUrl" | "name"> & {
+    videoUrl: { url: string; token: string };
+  };
+  user: {
+    avatarUrl: string | null;
+    id: string;
+    name: string;
+    email: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+};

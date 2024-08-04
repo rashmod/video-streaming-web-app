@@ -6,9 +6,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import VideoList from "@/components/custom/VideoList";
 
 import { videoApi } from "@/api";
+import { useSearchParams } from "react-router-dom";
 
 export default function Watch() {
-  const videoId = "123";
+  const [searchParams] = useSearchParams();
+
+  const videoId = searchParams.get("videoId");
 
   const {
     data: video,
@@ -16,7 +19,7 @@ export default function Watch() {
     isError: isErrorVideo,
   } = useQuery({
     queryKey: ["video", videoId],
-    queryFn: () => videoApi.watchVideo(videoId),
+    queryFn: () => videoApi.watchVideo(videoId!),
   });
 
   const {
@@ -51,16 +54,16 @@ export default function Watch() {
           {!isLoadingVideo && !isErrorVideo && video && (
             <>
               <Video
-                title="Quae qui modi libero deserunt est natus reiciendis explicabo quidem."
-                uploadedAt={new Date()}
-                url={video.url}
-                token={video.token}
+                title={video.data.video.title}
+                uploadedAt={video.data.video.createdAt}
+                url={video.data.video.videoUrl.url}
+                token={video.data.video.videoUrl.token}
               />
               <ChannelInfo
-                channelId="123"
-                channelName="Channel Name"
-                createdAt={new Date()}
-                channelAvatarUrl="https://picsum.photos/64/64"
+                channelId={video.data.user.id}
+                channelName={video.data.user.name}
+                createdAt={video.data.user.createdAt}
+                channelAvatarUrl={video.data.user.avatarUrl}
               />
             </>
           )}
