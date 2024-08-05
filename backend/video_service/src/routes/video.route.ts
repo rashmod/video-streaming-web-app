@@ -8,6 +8,9 @@ import isAuthorMiddleware from '../middlewares/isAuthor.middleware';
 const router = express.Router();
 
 router.route('/').get(catchAsync(VideoController.findMany));
+router
+	.route('/profile')
+	.get(authMiddleware, catchAsync(VideoController.getMyVideos));
 router.route('/user/:id').get(catchAsync(VideoController.getUserVideos));
 router
 	.route('/:id')

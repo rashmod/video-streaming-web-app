@@ -74,6 +74,25 @@ export default class VideoService {
 		return videosWithUrls;
 	}
 
+	static async getMyVideos(userId: string) {
+		const videos = await VideoRepository.getMyVideos(userId);
+		if (!videos) {
+			throw new InternalServerError('Failed to fetch videos');
+		}
+
+		const videosWithUrls = Promise.all(
+			videos.map(async (video) => {
+				const thumbnailUrl = await MediaService.getImageSignedUrl(
+					video.thumbnailName
+				);
+
+				return { ...video, thumbnailUrl };
+			})
+		);
+
+		return videosWithUrls;
+	}
+
 	static async updateVideo(
 		id: string,
 		data: Pick<NewVideo, 'title' | 'thumbnailName'>

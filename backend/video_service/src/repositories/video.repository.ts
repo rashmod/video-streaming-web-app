@@ -65,6 +65,24 @@ export default class VideoRepository {
 		return result;
 	}
 
+	static async getMyVideos(userId: string) {
+		const result = await db
+			.select({
+				id: video.id,
+				title: video.title,
+				duration: video.duration,
+				thumbnailName: video.thumbnailName,
+				videoName: video.videoName,
+				createdAt: video.createdAt,
+				status: videoState.status,
+			})
+			.from(video)
+			.innerJoin(videoState, eq(video.id, videoState.videoId))
+			.where(and(eq(video.userId, userId)));
+
+		return result;
+	}
+
 	static async updateVideo(
 		id: string,
 		data: Pick<NewVideo, 'title' | 'thumbnailName'>

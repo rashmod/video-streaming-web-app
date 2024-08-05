@@ -29,6 +29,19 @@ export default class VideoController {
 		handleServiceResponse(res, response);
 	}
 
+	static async getMyVideos(req: Request, res: Response) {
+		const userId = req.userId;
+
+		const videos = await VideoService.getMyVideos(userId);
+
+		const response = ServiceResponse.success({
+			data: videos,
+			message: 'My videos fetched successfully',
+			statusCode: 200,
+		});
+		handleServiceResponse(res, response);
+	}
+
 	static async getVideo(req: Request<{ id: string }>, res: Response) {
 		const { id }: { id: string } = req.params;
 
