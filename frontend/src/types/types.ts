@@ -103,3 +103,7 @@ export type WatchVideo = {
 };
 
 export type UserVideo = Omit<HomeVideo, "userId" | "name" | "avatarUrl">;
+
+export type ProfileVideo = Omit<HomeVideo, "userId" | "name" | "avatarUrl"> & {
+  status: VideoStatus;
+};

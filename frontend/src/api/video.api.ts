@@ -2,9 +2,9 @@ import axios from "@/utilities/axios";
 import envConfig from "../config/env.config";
 import {
   HomeVideo,
+  ProfileVideo,
   SuccessResponse,
   UserVideo,
-  Video,
   WatchVideo,
 } from "@/types/types";
 
@@ -24,7 +24,7 @@ async function getUserVideos(
   return response.data;
 }
 
-async function getProfileVideos(): Promise<SuccessResponse<Video[]>> {
+async function getProfileVideos(): Promise<SuccessResponse<ProfileVideo[]>> {
   const response = await axios.get(`${VIDEO_SERVICE_API_URL}/profile`);
   console.log(response);
   return response.data;
