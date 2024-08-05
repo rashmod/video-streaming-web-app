@@ -1,16 +1,16 @@
 import Preview from "@/components/custom/Preview";
 import { cn } from "@/lib/utils";
-import { HomeVideo, Video } from "@/types/types";
+import { HomeVideo, UserVideo } from "@/types/types";
 import generateViews from "@/utilities/generateViews";
 
 export default function VideoList({
   videos,
   compact = false,
 }: {
-  videos: Video[] | HomeVideo[];
+  videos: UserVideo[] | HomeVideo[];
   compact?: boolean;
 }) {
-  const isHomeVideo = (video: Video | HomeVideo): video is HomeVideo =>
+  const isHomeVideo = (video: UserVideo | HomeVideo): video is HomeVideo =>
     "userId" in video;
 
   return (
@@ -27,7 +27,7 @@ export default function VideoList({
           <Preview
             key={video.id}
             videoId={video.id}
-            imageUrl={showUser ? video.thumbnailUrl : video.thumbnailName}
+            imageUrl={video.thumbnailUrl}
             duration={video.duration}
             channelAvatarUrl={showUser ? video.avatarUrl : null}
             title={video.title}

@@ -4,7 +4,6 @@ import { CircleUser } from "lucide-react";
 import { USER_ID } from "@/constants/constants";
 import VideoList from "@/components/custom/VideoList";
 import LazyImage from "@/components/custom/LazyImage";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { videoApi, userApi } from "@/api";
 
 export default function User() {
@@ -26,13 +25,6 @@ export default function User() {
     queryFn: () => videoApi.getUserVideos(USER_ID),
   });
 
-  const uploadedVideos = videos?.filter(
-    (video) => video.status === "COMPLETED",
-  );
-  const uploadingVideos = videos?.filter(
-    (video) => video.status === "UPLOADING" || video.status === "TRANSCODING",
-  );
-
   return (
     <div className="grid gap-4">
       {isLoadingUser && <div>user loading</div>}
@@ -50,30 +42,13 @@ export default function User() {
           )}
           <div>
             <h1 className="text-3xl font-bold">{user.username}</h1>
-            <p>since {user.createdAt.toLocaleDateString()}</p>
+            <p>since {new Date(user.createdAt).toDateString()}</p>
           </div>
         </div>
       )}
       {isLoadingVideos && <div>videos loading</div>}
       {isErrorVideos && <div>videos error</div>}
-      {videos && uploadingVideos && uploadedVideos && (
-        <Tabs defaultValue="all">
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="uploaded">Uploaded</TabsTrigger>
-            <TabsTrigger value="uploading">Uploading</TabsTrigger>
-          </TabsList>
-          <TabsContent value="all">
-            <VideoList videos={videos} />
-          </TabsContent>
-          <TabsContent value="uploaded">
-            <VideoList videos={uploadedVideos} />
-          </TabsContent>
-          <TabsContent value="uploading">
-            <VideoList videos={uploadingVideos} />
-          </TabsContent>
-        </Tabs>
-      )}
+      {videos && <VideoList videos={videos.data} />}
     </div>
   );
 }

@@ -101,3 +101,5 @@ export type WatchVideo = {
     updatedAt: string;
   };
 };
+
+export type UserVideo = Omit<HomeVideo, "userId" | "name" | "avatarUrl">;
