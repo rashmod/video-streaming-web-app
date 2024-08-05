@@ -1,4 +1,3 @@
-import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl as getSignedUrlS3 } from '@aws-sdk/s3-request-presigner';
 import { getSignedUrl as getSignedUrlCloudFront } from '@aws-sdk/cloudfront-signer';
 
@@ -39,6 +38,8 @@ export default class MediaService {
 	}
 
 	static async getVideoSignedUrl(fileKey: string) {
+		const basename = fileKey.split('/').pop();
+
 		const policy = {
 			Statement: [
 				{
@@ -62,8 +63,8 @@ export default class MediaService {
 			privateKey: envConfig.AWS_CLOUDFRONT_PRIVATE_KEY,
 		});
 
-		const [_, token] = signedUrl.split('?');
-		const url = `${envConfig.AWS_CLOUDFRONT_URL}/${fileKey}/${fileKey}.m3u8`;
+		const [, token] = signedUrl.split('?');
+		const url = `${envConfig.AWS_CLOUDFRONT_URL}/${fileKey}/${basename}.m3u8`;
 
 		return { url, token: '?' + token };
 	}
