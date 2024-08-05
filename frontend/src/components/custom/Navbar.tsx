@@ -32,7 +32,7 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
           { "shadow-none": isSearchOpen },
         )}
       >
-        <Link to="#" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2">
           <MonitorPause className="h-6 w-6" />
           <span className="text-xl font-semibold">Streamline</span>
         </Link>
