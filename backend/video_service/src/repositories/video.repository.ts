@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 import db from '../db';
 import { user, video, videoState } from '../db/schema';
@@ -39,6 +39,28 @@ export default class VideoRepository {
 			})
 			.from(video)
 			.where(eq(video.id, id));
+
+		return result;
+	}
+
+	static async getUserVideos(userId: string) {
+		const result = await db
+			.select({
+				id: video.id,
+				title: video.title,
+				duration: video.duration,
+				thumbnailName: video.thumbnailName,
+				videoName: video.videoName,
+				createdAt: video.createdAt,
+			})
+			.from(video)
+			.innerJoin(videoState, eq(video.id, videoState.videoId))
+			.where(
+				and(
+					eq(video.userId, userId),
+					eq(videoState.status, 'COMPLETED')
+				)
+			);
 
 		return result;
 	}
