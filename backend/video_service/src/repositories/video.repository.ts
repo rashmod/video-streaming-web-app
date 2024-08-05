@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 
 import db from '../db';
-import { user, video } from '../db/schema';
+import { user, video, videoState } from '../db/schema';
 import { type NewVideo } from '../types/video.types';
 
 export default class VideoRepository {
@@ -19,7 +19,9 @@ export default class VideoRepository {
 				avatarUrl: user.avatarUrl,
 			})
 			.from(video)
-			.innerJoin(user, eq(video.userId, user.id));
+			.innerJoin(user, eq(video.userId, user.id))
+			.innerJoin(videoState, eq(video.id, videoState.videoId))
+			.where(eq(videoState.status, 'COMPLETED'));
 
 		return result;
 	}
