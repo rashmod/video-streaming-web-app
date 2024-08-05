@@ -7,7 +7,7 @@ import isAuthorMiddleware from '../middlewares/isAuthor.middleware';
 
 const router = express.Router();
 
-router.route('/videos').get(catchAsync(VideoController.findMany));
+router.route('/').get(catchAsync(VideoController.findMany));
 router
 	.route('/:id')
 	.get(catchAsync(VideoController.getVideo))
